@@ -1,22 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cliste Dashboard
+
+A beautiful, modern dashboard with an animated sidebar built using Next.js, TypeScript, Tailwind CSS, and Framer Motion. **Secured with Clerk authentication.**
+
+## Features
+
+- **🔐 Clerk Authentication**: Secure sign-in/sign-up with automatic session management
+- **Animated Sidebar**: Collapsible sidebar that expands on hover (desktop) or toggle (mobile)
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Dark Mode**: Full dark mode support
+- **Modern UI**: Clean and intuitive interface using shadcn/ui components
+- **Smooth Animations**: Powered by Framer Motion for fluid transitions
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ installed
+- A Clerk account ([sign up free](https://dashboard.clerk.com))
+
+### Installation
+
+1. **Install dependencies:**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Set up Clerk authentication:**
+   - Sign up at [https://dashboard.clerk.com](https://dashboard.clerk.com)
+   - Create a new application
+   - Copy your API keys from the dashboard
+   - Create a `.env.local` file in the root directory:
+   ```bash
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
+   CLERK_SECRET_KEY=sk_test_your_secret_key_here
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run the development server:**
+```bash
+npm run dev
+```
+
+4. **Open your browser:**
+   - Navigate to [http://localhost:3000](http://localhost:3000)
+   - You'll be redirected to sign in
+   - Create an account and access the dashboard
+
+📖 **Detailed setup instructions:** See [SETUP.md](./SETUP.md)
+
+🔒 **Security information:** See [SECURITY.md](./SECURITY.md)
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
