@@ -8,9 +8,7 @@ import {
   Phone, 
   Calendar, 
   ShoppingBag, 
-  CreditCard, 
-  Bell,
-  LogOut 
+  CreditCard 
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -62,17 +60,10 @@ export default function SidebarDemo() {
       ),
     },
     {
-      label: "Payments",
-      href: "/payments",
+      label: "Billing",
+      href: "/billing",
       icon: (
         <CreditCard className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Notifications",
-      href: "/notifications",
-      icon: (
-        <Bell className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
   ];
