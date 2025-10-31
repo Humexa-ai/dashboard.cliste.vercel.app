@@ -6,33 +6,29 @@ import {
   SidebarBody,
   SidebarLink,
 } from "@/components/sidebar";
-import { Home, BarChart3, Settings, Users, FileText, Bell, LogOut } from "lucide-react";
+import { LayoutDashboard, UserCog, Settings, LogOut } from "lucide-react";
+import { UserButton } from '@clerk/nextjs';
 
 const links = [
   {
     label: "Dashboard",
     href: "/",
-    icon: <Home className="w-5 h-5" />,
+    icon: <LayoutDashboard className="w-5 h-5" />,
   },
   {
-    label: "Analytics",
-    href: "/analytics",
-    icon: <BarChart3 className="w-5 h-5" />,
-  },
-  {
-    label: "Users",
+    label: "User Management",
     href: "/users",
-    icon: <Users className="w-5 h-5" />,
-  },
-  {
-    label: "Documents",
-    href: "/documents",
-    icon: <FileText className="w-5 h-5" />,
+    icon: <UserCog className="w-5 h-5" />,
   },
   {
     label: "Settings",
     href: "/settings",
     icon: <Settings className="w-5 h-5" />,
+  },
+  {
+    label: "Logout",
+    href: "/logout",
+    icon: <LogOut className="w-5 h-5" />,
   },
 ];
 
@@ -55,10 +51,36 @@ export default function DashboardPage() {
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
+            <div className="mt-auto p-2">
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: "w-8 h-8",
+                  },
+                }}
+              />
+            </div>
           </div>
         </SidebarBody>
-        <main className="flex-1 overflow-auto p-8">
-          {/* Empty main content - just showing the sidebar */}
+        <main className="flex-1 overflow-auto p-8 bg-neutral-950">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="bg-neutral-900 rounded-lg p-6 border border-neutral-800"
+              >
+                <div className="h-4 w-4 bg-neutral-700 rounded"></div>
+              </div>
+            ))}
+            {[1, 2].map((item) => (
+              <div
+                key={item + 3}
+                className="bg-neutral-900 rounded-lg p-6 border border-neutral-800 md:col-span-2"
+              >
+                <div className="h-4 w-4 bg-neutral-700 rounded"></div>
+              </div>
+            ))}
+          </div>
         </main>
       </div>
     </Sidebar>
