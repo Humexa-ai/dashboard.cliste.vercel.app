@@ -14,8 +14,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useUser } from '@clerk/nextjs';
 
 export default function SidebarDemo() {
+  const { user } = useUser();
   const links = [
     {
       label: "Overview",
@@ -79,7 +81,7 @@ export default function SidebarDemo() {
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {open ? <Logo /> : <LogoIcon />}
+            {open ? <Logo userName={user?.fullName || user?.firstName || 'Dashboard'} /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
@@ -110,19 +112,18 @@ export default function SidebarDemo() {
   );
 }
 
-const Logo = () => {
+const Logo = ({ userName }: { userName?: string }) => {
   return (
     <Link
       href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+      className="font-normal flex items-center text-sm text-black py-1 relative z-20"
     >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium text-black dark:text-white whitespace-pre"
       >
-        Cliste
+        {userName}
       </motion.span>
     </Link>
   );
@@ -132,9 +133,8 @@ const LogoIcon = () => {
   return (
     <Link
       href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
+      className="font-normal flex items-center text-sm text-black py-1 relative z-20"
     >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
     </Link>
   );
 };
