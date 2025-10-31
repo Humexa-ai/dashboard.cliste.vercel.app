@@ -5,9 +5,8 @@ import {
   Sidebar,
   SidebarBody,
   SidebarLink,
-} from "@/components/sidebar";
+} from "@/components/ui/sidebar";
 import { LayoutDashboard, UserCog, Settings, LogOut } from "lucide-react";
-import { UserButton } from '@clerk/nextjs';
 
 const links = [
   {
@@ -32,7 +31,7 @@ const links = [
   },
 ];
 
-export default function DashboardPage() {
+export default function SidebarDemo() {
   return (
     <Sidebar>
       <div className="flex h-screen w-full">
@@ -51,33 +50,24 @@ export default function DashboardPage() {
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
-            <div className="mt-auto p-2">
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "w-8 h-8",
-                  },
-                }}
-              />
-            </div>
           </div>
         </SidebarBody>
-        <main className="flex-1 overflow-auto p-8 bg-neutral-950">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <main className="flex-1 overflow-auto p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="bg-neutral-900 rounded-lg p-6 border border-neutral-800"
+                className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-6 border border-neutral-200 dark:border-neutral-700"
               >
-                <div className="h-4 w-4 bg-neutral-700 rounded"></div>
+                <div className="h-4 w-4 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
               </div>
             ))}
             {[1, 2].map((item) => (
               <div
                 key={item + 3}
-                className="bg-neutral-900 rounded-lg p-6 border border-neutral-800 md:col-span-2"
+                className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-6 border border-neutral-200 dark:border-neutral-700 md:col-span-2"
               >
-                <div className="h-4 w-4 bg-neutral-700 rounded"></div>
+                <div className="h-4 w-4 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
               </div>
             ))}
           </div>
@@ -86,3 +76,4 @@ export default function DashboardPage() {
     </Sidebar>
   );
 }
+
