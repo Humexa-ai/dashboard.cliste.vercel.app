@@ -10,9 +10,16 @@ const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
 ]);
 
+// Define public routes (sign-in and sign-up should use custom pages)
+const isPublicRoute = createRouteMatcher([
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/verify-email(.*)',
+]);
+
 export default clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request)) {
-    // Protect all routes except sign-in and sign-up
+  // Only protect non-public routes
+  if (!isPublicRoute(request) && isProtectedRoute(request)) {
     await auth.protect();
   }
 });
