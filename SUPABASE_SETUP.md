@@ -63,3 +63,5 @@ const { data, error } = await supabase
 
 **Your Supabase client is ready to use!** 🎉
 
+
+

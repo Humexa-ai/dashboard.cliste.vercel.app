@@ -1,39 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { ClerkProvider } from '@clerk/nextjs';
-import { Analytics } from '@vercel/analytics/react';
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  title: "Cliste Dashboard",
-  description: "A beautiful, modern dashboard with an animated sidebar",
+  title: "Cliste Client Dashboard",
+  description: "Cliste Dashboard",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning className="dark">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased m-0 p-0`}
+    <html lang="en">
+      <body className="bg-[#0a0a0a] text-white antialiased">
+        <ClerkProvider
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          signInUrl="/sign-in"
+          afterSignInUrl="/dashboard"
         >
           {children}
-          <Analytics />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

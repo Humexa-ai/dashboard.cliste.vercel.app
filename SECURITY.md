@@ -104,3 +104,5 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 - Clerk Documentation: [https://clerk.com/docs](https://clerk.com/docs)
 - Clerk Support: [https://clerk.com/support](https://clerk.com/support)
 
+
+
