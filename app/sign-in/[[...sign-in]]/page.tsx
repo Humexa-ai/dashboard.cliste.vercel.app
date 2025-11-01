@@ -149,7 +149,7 @@ export default function LoginCardSection() {
           <div className="space-y-1 mb-5">
             <div className="flex items-center justify-center gap-2">
               <h1 className="text-2xl font-semibold">Welcome back</h1>
-              <img src="/cliste-logo.svg" alt="Cliste" className="h-6 w-auto opacity-90" />
+              <img src="/file.svg" alt="Cliste" className="h-6 w-auto opacity-90 align-middle" />
             </div>
             <p className="text-zinc-400 text-center">Sign in to your account</p>
           </div>
