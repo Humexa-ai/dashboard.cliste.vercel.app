@@ -158,6 +158,12 @@ export default function LoginCardSection() {
                   // Fallback to existing asset if custom logo not found
                   (e.currentTarget as HTMLImageElement).src = "/file.svg";
                 }}
+                onLoad={(e) => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  if (!img.naturalWidth || !img.naturalHeight) {
+                    img.src = "/file.svg";
+                  }
+                }}
               />
             </div>
             <p className="text-zinc-400 text-center">Sign in to your account</p>
