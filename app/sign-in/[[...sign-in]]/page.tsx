@@ -149,7 +149,16 @@ export default function LoginCardSection() {
           <div className="space-y-1 mb-5">
             <div className="flex items-center justify-center gap-2">
               <h1 className="text-2xl font-semibold">Welcome back</h1>
-              <img src="/cliste-logo.svg" alt="Cliste" className="h-6 w-auto opacity-90 align-middle" />
+              <img
+                src="/cliste-logo.svg"
+                alt="Cliste"
+                className="h-6 w-auto opacity-90 align-middle"
+                loading="eager"
+                onError={(e) => {
+                  // Fallback to existing asset if custom logo not found
+                  (e.currentTarget as HTMLImageElement).src = "/file.svg";
+                }}
+              />
             </div>
             <p className="text-zinc-400 text-center">Sign in to your account</p>
           </div>
