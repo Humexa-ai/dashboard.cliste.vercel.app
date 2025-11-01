@@ -145,16 +145,11 @@ export default function LoginCardSection() {
 
       {/* Card */}
       <div className="h-full w-full grid place-items-center px-4">
-        {/* Logo */}
-        <div className="absolute top-6 left-0 right-0 flex justify-center">
-          {/* Replace /file.svg with your real logo (e.g., /cliste-logo.svg) */}
-          <img src="/file.svg" alt="Cliste" className="h-6 opacity-80" />
-        </div>
         <form onSubmit={handleSubmit} className="card-animate w-full max-w-sm border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
           <div className="space-y-1 mb-5">
             <div className="flex items-center justify-center gap-2">
               <h1 className="text-2xl font-semibold">Welcome back</h1>
-              <img src="/file.svg" alt="Cliste" className="h-6 w-auto opacity-90" />
+              <img src="/cliste-logo.svg" alt="Cliste" className="h-6 w-auto opacity-90" />
             </div>
             <p className="text-zinc-400 text-center">Sign in to your account</p>
           </div>
