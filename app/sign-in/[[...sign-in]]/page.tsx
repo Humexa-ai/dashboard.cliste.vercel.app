@@ -11,7 +11,16 @@ export default function Page() {
       <div className="relative min-h-screen overflow-hidden">
         {/* Three.js animated background */}
         <div className="absolute inset-0">
-          <Beams beamWidth={2} beamHeight={15} beamNumber={12} lightColor="#ffffff" speed={2} noiseIntensity={1.75} scale={0.2} rotation={0} />
+          <Beams
+            beamWidth={3}
+            beamHeight={18}
+            beamNumber={18}
+            lightColor="#ffffff"
+            speed={2.5}
+            noiseIntensity={0.9}
+            scale={0.15}
+            rotation={-35}
+          />
         </div>
 
         {/* Content */}
