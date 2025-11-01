@@ -1,15 +1,18 @@
 "use client";
 
 import { ClerkProvider, SignIn } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
+
+const Beams = dynamic(() => import("@/components/Beams"), { ssr: false });
 
 export default function Page() {
   return (
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY} signInUrl="/sign-in" afterSignInUrl="/dashboard">
       <div className="relative min-h-screen overflow-hidden">
-        {/* Background gradient and glow accents */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0118] via-[#0a0a0a] to-[#1f1147]" />
-        <div className="pointer-events-none absolute -top-32 -left-24 h-[420px] w-[420px] rounded-full bg-[#7c3aed]/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -right-24 h-[420px] w-[420px] rounded-full bg-[#22d3ee]/20 blur-3xl" />
+        {/* Three.js animated background */}
+        <div className="absolute inset-0">
+          <Beams beamWidth={2} beamHeight={15} beamNumber={12} lightColor="#ffffff" speed={2} noiseIntensity={1.75} scale={0.2} rotation={0} />
+        </div>
 
         {/* Content */}
         <div className="relative grid min-h-screen place-items-center p-6">
@@ -21,7 +24,7 @@ export default function Page() {
                 colorInputText: '#ffffff',
               },
               elements: {
-                card: "bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl",
+                card: "bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl",
                 headerTitle: "text-white",
                 headerSubtitle: "text-white/70",
                 formFieldLabel: "text-white",
