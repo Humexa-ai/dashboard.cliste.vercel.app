@@ -141,17 +141,15 @@ export default function LoginCardSection() {
       {/* Particles */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-50 mix-blend-screen pointer-events-none" />
 
-      {/* Header */}
-      <header className="absolute left-0 right-0 top-0 flex items-center justify-between px-6 py-4 border-b border-zinc-800/80">
-        <span className="text-xs tracking-[0.14em] uppercase text-zinc-400">NOVA</span>
-        <button className="h-9 rounded-lg border border-zinc-800 bg-zinc-900 px-3 text-zinc-50 hover:bg-zinc-900/80 flex items-center">
-          <span className="mr-2">Contact</span>
-          <ArrowRight className="h-4 w-4" />
-        </button>
-      </header>
+      {/* Header removed as requested */}
 
       {/* Card */}
       <div className="h-full w-full grid place-items-center px-4">
+        {/* Logo */}
+        <div className="absolute top-6 left-0 right-0 flex justify-center">
+          {/* Replace /file.svg with your real logo (e.g., /cliste-logo.svg) */}
+          <img src="/file.svg" alt="Cliste" className="h-6 opacity-80" />
+        </div>
         <form onSubmit={handleSubmit} className="card-animate w-full max-w-sm border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
           <div className="space-y-1 mb-5">
             <h1 className="text-2xl font-semibold">Welcome back</h1>
@@ -182,19 +180,7 @@ export default function LoginCardSection() {
 
             <button type="submit" disabled={loading || !isLoaded} className="w-full h-10 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200 disabled:opacity-50">{loading?"Signing in...":"Continue"}</button>
 
-            <div className="relative">
-              <div className="h-px w-full bg-zinc-800" />
-              <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-zinc-900/70 px-2 text-[11px] uppercase tracking-widest text-zinc-500">or</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button type="button" onClick={()=>oauth("oauth_github")} className="h-10 rounded-lg border border-zinc-800 bg-zinc-950 text-zinc-50 hover:bg-zinc-900/80 flex items-center justify-center">
-                <Github className="h-4 w-4 mr-2" /> GitHub
-              </button>
-              <button type="button" onClick={()=>oauth("oauth_google")} className="h-10 rounded-lg border border-zinc-800 bg-zinc-950 text-zinc-50 hover:bg-zinc-900/80 flex items-center justify-center">
-                <Chrome className="h-4 w-4 mr-2" /> Google
-              </button>
-            </div>
+            {/* OAuth options removed */}
           </div>
         </form>
       </div>
