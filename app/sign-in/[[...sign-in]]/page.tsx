@@ -152,8 +152,11 @@ export default function LoginCardSection() {
         </div>
         <form onSubmit={handleSubmit} className="card-animate w-full max-w-sm border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
           <div className="space-y-1 mb-5">
-            <h1 className="text-2xl font-semibold">Welcome back</h1>
-            <p className="text-zinc-400">Sign in to your account</p>
+            <div className="flex items-center justify-center gap-2">
+              <h1 className="text-2xl font-semibold">Welcome back</h1>
+              <img src="/file.svg" alt="Cliste" className="h-6 w-auto opacity-90" />
+            </div>
+            <p className="text-zinc-400 text-center">Sign in to your account</p>
           </div>
 
           <div className="grid gap-5">
