@@ -149,27 +149,7 @@ export default function LoginCardSection() {
           <div className="space-y-1 mb-5">
             <div className="flex items-center justify-center gap-2">
               <h1 className="text-2xl font-semibold">Welcome back</h1>
-              <img
-                src="/cliste-logo.svg?v=1"
-                alt="Cliste"
-                className="h-6 w-auto opacity-90 align-middle ml-1"
-                loading="eager"
-                onError={(e) => {
-                  const img = e.currentTarget as HTMLImageElement;
-                  // First try PNG fallback if SVG missing/empty, then default icon
-                  if (!img.src.includes("cliste-logo.png")) {
-                    img.src = "/cliste-logo.png";
-                  } else {
-                    img.src = "/file.svg";
-                  }
-                }}
-                onLoad={(e) => {
-                  const img = e.currentTarget as HTMLImageElement;
-                  if (!img.naturalWidth || !img.naturalHeight) {
-                    img.src = "/cliste-logo.png";
-                  }
-                }}
-              />
+              <img src="/cliste-logo.png" alt="Cliste" className="h-6 w-auto align-middle ml-1" />
             </div>
             <p className="text-zinc-400 text-center">Sign in to your account</p>
           </div>
