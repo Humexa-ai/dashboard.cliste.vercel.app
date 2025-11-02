@@ -78,8 +78,12 @@ function PaymentSection() {
     if (!isFormReady || isProcessing) return;
     setIsProcessing(true);
     try {
-      const { data } = await submit();
-      await confirm(data);
+      const { data, error: submitError } = await submit();
+      if (submitError || !data) {
+        return;
+      }
+      // Clerk types may vary; guard and cast to the expected params shape
+      await confirm(data as any);
       await finalize({ navigate: () => router.push("/dashboard") });
     } finally {
       setIsProcessing(false);
