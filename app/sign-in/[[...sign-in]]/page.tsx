@@ -157,7 +157,18 @@ export default function LoginCardSection() {
           {/* Use Clerk prebuilt SignIn to avoid any session edge-cases; still honors redirect_url */}
           <div className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-4">
             <SignIn
-              appearance={{ elements: { formButtonPrimary: "!bg-zinc-50 !text-zinc-900 hover:!bg-zinc-200" } }}
+              appearance={{
+                elements: {
+                  rootBox: "w-full",
+                  card: "bg-transparent shadow-none border-0",
+                  headerTitle: "text-zinc-50",
+                  headerSubtitle: "text-zinc-400",
+                  formButtonPrimary: "!bg-zinc-50 !text-zinc-900 hover:!bg-zinc-200",
+                  formFieldLabel: "text-zinc-300",
+                  formFieldInput: "!bg-zinc-950 !border-zinc-800 !text-zinc-50",
+                  footerAction__signUp: "hidden",
+                },
+              }}
               fallbackRedirectUrl={redirectUrl}
               redirectUrl={redirectUrl}
               afterSignInUrl={redirectUrl}
