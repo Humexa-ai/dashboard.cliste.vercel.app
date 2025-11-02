@@ -300,3 +300,6 @@ const DirLight = ({ position, color }: { position: [number, number, number]; col
 export default Beams;
 
 
+
+
+
