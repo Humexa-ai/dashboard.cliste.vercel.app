@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useSignIn, useAuth } from "@clerk/nextjs";
+import { useSignIn, useAuth, SignIn } from "@clerk/nextjs";
 import { Eye, EyeOff, Github, Lock, Mail, ArrowRight, Chrome } from "lucide-react";
 
 export default function LoginCardSection() {
@@ -154,41 +154,15 @@ export default function LoginCardSection() {
             <img src="/cliste-logo.png" alt="Cliste" className="h-20 w-auto" />
           </div>
 
-          <form onSubmit={handleSubmit} className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
-          <div className="space-y-1 mb-5 text-center">
-            <h1 className="text-2xl font-semibold">Welcome back</h1>
-            <p className="text-zinc-400">Sign in to your account</p>
+          {/* Use Clerk prebuilt SignIn to avoid any session edge-cases; still honors redirect_url */}
+          <div className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-4">
+            <SignIn
+              appearance={{ elements: { formButtonPrimary: "!bg-zinc-50 !text-zinc-900 hover:!bg-zinc-200" } }}
+              fallbackRedirectUrl={redirectUrl}
+              redirectUrl={redirectUrl}
+              afterSignInUrl={redirectUrl}
+            />
           </div>
-
-          <div className="grid gap-5">
-            <div className="grid gap-2">
-              <label htmlFor="email" className="text-zinc-300">Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-                <input id="email" type="email" required value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com" className="pl-10 w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
-              </div>
-            </div>
-
-            {/* Logo moved outside the card */}
-
-            <div className="grid gap-2">
-              <label htmlFor="password" className="text-zinc-300">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-                <input id="password" type={showPassword?"text":"password"} required value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="••••••••" className="pl-10 pr-10 w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
-                <button type="button" aria-label={showPassword?"Hide password":"Show password"} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-md text-zinc-400 hover:text-zinc-200" onClick={()=>setShowPassword(v=>!v)}>
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-
-            {error && <div className="rounded-md border border-red-500/30 bg-red-500/10 text-red-400 text-sm px-3 py-2">{error}</div>}
-
-            <button type="submit" disabled={loading || !isLoaded} className="w-full h-10 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200 disabled:opacity-50">{loading?"Signing in...":"Continue"}</button>
-
-            {/* OAuth options removed */}
-          </div>
-          </form>
         </div>
       </div>
     </section>
