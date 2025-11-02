@@ -47,7 +47,7 @@ function CheckoutClient() {
             </div>
           </main>
         ) : (
-        <CheckoutProvider for="organization" organizationId={organization.id} planId={planId} planPeriod="month">
+        <CheckoutProvider for="organization" planId={planId} planPeriod="month">
           <CheckoutShell />
         </CheckoutProvider>
         )}
