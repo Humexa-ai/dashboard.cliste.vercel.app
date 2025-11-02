@@ -55,21 +55,11 @@ export default function PlanSelectionPage() {
   }, []);
 
   const startCheckout = async (plan: string) => {
-    try {
-      setLoadingPlan(plan);
-      const res = await fetch("/api/billing/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Checkout failed");
-      window.location.href = data.url;
-    } catch (e) {
-      alert((e as Error).message);
-      setLoadingPlan(null);
-    }
-  };
+    setLoadingPlan(plan)
+    // With Clerk Billing, plans are selected within Clerk UI.
+    // Send user to organization profile where Billing is enabled.
+    window.location.href = "/org/profile"
+  }
 
   return (
     <>

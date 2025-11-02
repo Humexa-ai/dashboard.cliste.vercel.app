@@ -21,12 +21,14 @@ import Link from "next/link"
 import { useState } from "react"
 import Image from "next/image"
 import { useOrganization, useUser, SignOutButton } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { organization } = useOrganization()
   const { user } = useUser()
   const [billingLoading, setBillingLoading] = useState(false)
+  const router = useRouter()
 
   function handleNavigation() {
     setIsMobileMenuOpen(false)
@@ -53,18 +55,9 @@ export default function Sidebar() {
     )
   }
 
-  async function openBillingPortal() {
-    try {
-      setBillingLoading(true)
-      const res = await fetch("/api/billing/portal", { method: "POST" })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data?.error || "Unable to open billing portal")
-      window.location.href = data.url
-    } catch (e: any) {
-      alert(e.message)
-    } finally {
-      setBillingLoading(false)
-    }
+  function openBillingPortal() {
+    setBillingLoading(true)
+    router.push("/org/profile")
   }
 
   return (
