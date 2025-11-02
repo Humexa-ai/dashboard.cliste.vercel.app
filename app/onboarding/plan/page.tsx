@@ -1,28 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-// Experimental plans hook (Clerk Billing)
+// Clerk prebuilt PricingTable for hosted checkout
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { usePlans } from "@clerk/nextjs/experimental";
+import { PricingTable } from "@clerk/nextjs/experimental";
 
 export default function PlanSelectionPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const plansResult = usePlans ? (usePlans() as any) : { isLoaded: false, data: [] };
-  const isPlansLoaded = !!plansResult?.isLoaded;
-  const plans = (plansResult?.data as any[]) || [];
-  const fallbackPlans = [
-    { id: "cplan_34vtJFrz7GwkR6MZcOCKNRTUDY7", name: "Plan A" },
-    { id: "cplan_34vtLYAaF9zlaGrAZiWZ5ZBRyj0", name: "Plan B" },
-    { id: "cplan_34vtN50OI0opTGPyAFwHQlMVdzz", name: "Plan C" },
-  ];
-  const displayPlans: Array<{ id: string; name: string; description?: string }> =
-    isPlansLoaded && plans.length
-      ? plans.map((p: any) => ({ id: p.id || p.planKey, name: p.name || p.planKey, description: p.description }))
-      : fallbackPlans;
 
   // reuse subtle particles background
   useEffect(() => {
@@ -71,10 +58,7 @@ export default function PlanSelectionPage() {
     };
   }, []);
 
-  const startCheckout = async (planId: string) => {
-    setLoadingPlan(planId)
-    window.location.href = `/checkout?planId=${encodeURIComponent(planId)}`
-  }
+  // Using Clerk hosted checkout via PricingTable; no explicit handler needed
 
   return (
         <section className="fixed inset-0 bg-zinc-950 text-zinc-50">
@@ -140,22 +124,12 @@ export default function PlanSelectionPage() {
                 </SignedOut>
 
                 <SignedIn>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {displayPlans.map((plan) => (
-                      <button
-                        key={plan.id}
-                        onClick={() => startCheckout(plan.id)}
-                        disabled={!!loadingPlan}
-                        className="text-left rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 p-4 disabled:opacity-60"
-                      >
-                        <div className="flex items-baseline justify-between">
-                          <span className="text-lg font-medium text-zinc-100">{plan.name}</span>
-                        </div>
-                        <div className="mt-1 text-sm text-zinc-400">{loadingPlan === plan.id ? "Opening checkout..." : (plan?.description || "")}</div>
-                      </button>
-                    ))}
+                  <div className="max-w-4xl mx-auto">
+                    {/* Clerk PricingTable renders available org plans and opens hosted checkout */}
+                    {/* @ts-ignore */}
+                    <PricingTable for="organization" redirectUrl="/dashboard" />
                   </div>
-                  <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing. You can change them later in Organization settings.</div>
+                  <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing and checkout is hosted by Clerk.</div>
                 </SignedIn>
               </div>
             </div>
