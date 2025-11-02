@@ -9,7 +9,7 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const search = useSearchParams();
-  const redirectUrl = search.get("redirect_url") || "/dashboard";
+  const redirectUrl = search.get("redirect_url") || "/org/profile";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
