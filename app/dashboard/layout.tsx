@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
+import { useOrganization } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import KokonutLayout from "@/components/kokonutui/layout";
  
 
@@ -7,7 +10,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Protected by middleware; render layout directly
+  const { organization } = useOrganization();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (organization === null) {
+      router.replace("/org/profile");
+    }
+  }, [organization, router]);
+
   return <KokonutLayout>{children}</KokonutLayout>;
 }
 
