@@ -125,9 +125,16 @@ export default function PlanSelectionPage() {
 
                 <SignedIn>
                   <div className="max-w-4xl mx-auto">
-                    {/* Clerk PricingTable renders available org plans and opens hosted checkout */}
-                    {/* @ts-ignore */}
-                    <PricingTable for="organization" redirectUrl="/dashboard" />
+                    {/* Guard: Some Clerk versions may not export PricingTable */}
+                    {typeof PricingTable === "function" ? (
+                      // @ts-ignore
+                      <PricingTable for="organization" redirectUrl="/dashboard" />
+                    ) : (
+                      <div className="text-center">
+                        <p className="text-zinc-300 mb-3">Billing checkout is unavailable in this environment.</p>
+                        <Link href="/org/profile" className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200">Open Billing</Link>
+                      </div>
+                    )}
                   </div>
                   <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing and checkout is hosted by Clerk.</div>
                 </SignedIn>
