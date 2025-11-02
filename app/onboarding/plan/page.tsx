@@ -14,6 +14,15 @@ export default function PlanSelectionPage() {
   const plansResult = usePlans ? (usePlans() as any) : { isLoaded: false, data: [] };
   const isPlansLoaded = !!plansResult?.isLoaded;
   const plans = (plansResult?.data as any[]) || [];
+  const fallbackPlans = [
+    { id: "cplan_34vtJFrz7GwkR6MZcOCKNRTUDY7", name: "Plan A" },
+    { id: "cplan_34vtLYAaF9zlaGrAZiWZ5ZBRyj0", name: "Plan B" },
+    { id: "cplan_34vtN50OI0opTGPyAFwHQlMVdzz", name: "Plan C" },
+  ];
+  const displayPlans: Array<{ id: string; name: string; description?: string }> =
+    isPlansLoaded && plans.length
+      ? plans.map((p: any) => ({ id: p.id || p.planKey, name: p.name || p.planKey, description: p.description }))
+      : fallbackPlans;
 
   // reuse subtle particles background
   useEffect(() => {
@@ -134,25 +143,19 @@ export default function PlanSelectionPage() {
 
                 <SignedIn>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {(isPlansLoaded && plans.length ? plans : []).map((plan: any) => {
-                      const name = plan?.name || plan?.planKey || "Plan";
-                      return (
-                        <button
-                          key={plan.id || plan.planKey || name}
-                          onClick={() => startCheckout(name)}
-                          disabled={!!loadingPlan}
-                          className="text-left rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 p-4 disabled:opacity-60"
-                        >
-                          <div className="flex items-baseline justify-between">
-                            <span className="text-lg font-medium text-zinc-100">{name}</span>
-                          </div>
-                          <div className="mt-1 text-sm text-zinc-400">{loadingPlan === name ? "Opening billing..." : (plan?.description || "")}</div>
-                        </button>
-                      );
-                    })}
-                    {!isPlansLoaded && (
-                      <div className="col-span-3 text-center text-zinc-400">Loading plans…</div>
-                    )}
+                    {displayPlans.map((plan) => (
+                      <button
+                        key={plan.id}
+                        onClick={() => startCheckout(plan.name)}
+                        disabled={!!loadingPlan}
+                        className="text-left rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 p-4 disabled:opacity-60"
+                      >
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-lg font-medium text-zinc-100">{plan.name}</span>
+                        </div>
+                        <div className="mt-1 text-sm text-zinc-400">{loadingPlan === plan.name ? "Opening billing..." : (plan?.description || "")}</div>
+                      </button>
+                    ))}
                   </div>
                   <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing. You can change them later in Organization settings.</div>
                 </SignedIn>
