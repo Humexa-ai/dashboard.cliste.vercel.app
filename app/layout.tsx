@@ -24,7 +24,7 @@ export default function RootLayout({
       signInUrl="/sign-in"
       afterSignInUrl="/dashboard"
       signUpUrl="/sign-up"
-      afterSignUpUrl="/onboarding/plan"
+      afterSignUpUrl="/dashboard"
     >
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
             {children}
