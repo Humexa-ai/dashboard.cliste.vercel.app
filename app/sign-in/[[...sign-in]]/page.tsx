@@ -147,7 +147,7 @@ export default function LoginCardSection() {
       <div className="h-full w-full grid place-items-center px-4">
         <div className="relative w-full max-w-sm">
           {/* Logo outside the card, centered above */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-6">
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-6 card-animate">
             <img src="/cliste-logo.png" alt="Cliste" className="h-20 w-auto" />
           </div>
 
