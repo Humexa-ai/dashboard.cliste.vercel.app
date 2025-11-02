@@ -9,9 +9,14 @@ const isPublicRoute = createRouteMatcher([
   "/",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware((auth, req) => {
   if (!isPublicRoute(req)) {
-    await auth.protect();
+    const { userId } = auth();
+    if (!userId) {
+      const url = new URL("/sign-in", req.url);
+      url.searchParams.set("redirect_url", req.url);
+      return NextResponse.redirect(url);
+    }
   }
   return NextResponse.next();
 });
@@ -19,5 +24,6 @@ export default clerkMiddleware(async (auth, req) => {
 export const config = {
   matcher: ["/((?!_next|.*\\..*).*)"],
 };
+
 
 
