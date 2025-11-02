@@ -1,10 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+// Experimental plans hook (Clerk Billing)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { usePlans } from "@clerk/nextjs/experimental";
 
 export default function PlanSelectionPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const plansResult = usePlans ? (usePlans() as any) : { isLoaded: false, data: [] };
+  const isPlansLoaded = !!plansResult?.isLoaded;
+  const plans = (plansResult?.data as any[]) || [];
 
   // reuse subtle particles background
   useEffect(() => {
@@ -115,27 +124,38 @@ export default function PlanSelectionPage() {
                   <h1 className="text-2xl font-semibold">Choose your plan</h1>
                   <p className="text-zinc-400">Select a plan to continue to your dashboard</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[
-                    { name: "Starter", price: "$0", desc: "Try it out" },
-                    { name: "Growth", price: "$49", desc: "Most popular" },
-                    { name: "Scale", price: "$149", desc: "Advanced" },
-                  ].map((p) => (
-                    <button
-                      key={p.name}
-                      onClick={() => startCheckout(p.name)}
-                      disabled={!!loadingPlan}
-                      className="text-left rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 p-4 disabled:opacity-60"
-                    >
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-lg font-medium text-zinc-100">{p.name}</span>
-                        <span className="text-zinc-300">{p.price}/mo</span>
-                      </div>
-                      <div className="mt-1 text-sm text-zinc-400">{loadingPlan === p.name ? "Redirecting to checkout..." : p.desc}</div>
-                    </button>
-                  ))}
-                </div>
-                <div className="mt-6 text-center text-xs text-zinc-500">Set STRIPE_PRICE_STARTER/GROWTH/SCALE env vars to enable checkout.</div>
+                <SignedOut>
+                  <div className="text-center">
+                    <Link href="/sign-in?redirect_url=/onboarding/plan" className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200">
+                      Sign in to choose a plan
+                    </Link>
+                  </div>
+                </SignedOut>
+
+                <SignedIn>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {(isPlansLoaded && plans.length ? plans : []).map((plan: any) => {
+                      const name = plan?.name || plan?.planKey || "Plan";
+                      return (
+                        <button
+                          key={plan.id || plan.planKey || name}
+                          onClick={() => startCheckout(name)}
+                          disabled={!!loadingPlan}
+                          className="text-left rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 p-4 disabled:opacity-60"
+                        >
+                          <div className="flex items-baseline justify-between">
+                            <span className="text-lg font-medium text-zinc-100">{name}</span>
+                          </div>
+                          <div className="mt-1 text-sm text-zinc-400">{loadingPlan === name ? "Opening billing..." : (plan?.description || "")}</div>
+                        </button>
+                      );
+                    })}
+                    {!isPlansLoaded && (
+                      <div className="col-span-3 text-center text-zinc-400">Loading plans…</div>
+                    )}
+                  </div>
+                  <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing. You can change them later in Organization settings.</div>
+                </SignedIn>
               </div>
             </div>
           </div>
