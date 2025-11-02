@@ -2,12 +2,15 @@
 
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSignIn, useAuth } from "@clerk/nextjs";
 import { Eye, EyeOff, Github, Lock, Mail, ArrowRight, Chrome } from "lucide-react";
 
 export default function LoginCardSection() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useAuth();
+  const search = useSearchParams();
+  const redirectUrl = search.get("redirect_url") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -64,9 +67,9 @@ export default function LoginCardSection() {
 
   useEffect(() => {
     if (isSignedIn) {
-      window.location.href = "/dashboard";
+      window.location.href = redirectUrl;
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, redirectUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +80,7 @@ export default function LoginCardSection() {
       const res = await signIn.create({ identifier: email, password });
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
-        window.location.href = "/dashboard";
+        window.location.href = redirectUrl;
       } else {
         setError("Check your email for verification.");
       }

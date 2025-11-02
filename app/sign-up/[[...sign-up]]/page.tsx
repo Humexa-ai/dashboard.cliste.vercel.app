@@ -2,11 +2,14 @@
 
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSignUp } from "@clerk/nextjs";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const search = useSearchParams();
+  const redirectUrl = search.get("redirect_url") || "/onboarding/plan";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -88,7 +91,7 @@ export default function SignUpPage() {
       const res = await signUp.attemptEmailAddressVerification({ code });
       if (res.status === "complete") {
         await setActive({ session: res.createdSessionId });
-        window.location.href = "/onboarding/plan";
+        window.location.href = redirectUrl;
       }
     } catch (err: any) {
       setError(err?.errors?.[0]?.message || "Invalid code. Please try again.");
