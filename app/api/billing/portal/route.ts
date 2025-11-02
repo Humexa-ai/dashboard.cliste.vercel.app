@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 async function getCustomerId(userId: string, orgId?: string | null) {
   const clerk = await clerkClient();
@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
   if (!customerId) return NextResponse.json({ error: "No Stripe customer." }, { status: 400 });
 
   try {
+    const stripe = getStripe();
+    if (!stripe) return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
     const portal = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${origin}/dashboard`,

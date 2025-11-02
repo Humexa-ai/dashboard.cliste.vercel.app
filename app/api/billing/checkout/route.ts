@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 function getPriceIdForPlan(plan: string | undefined): string | null {
   const map: Record<string, string | undefined> = {
@@ -63,6 +63,8 @@ export async function POST(req: NextRequest) {
   const origin = req.headers.get("origin") || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}`;
 
   try {
+    const stripe = getStripe();
+    if (!stripe) return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
     const customerId = await getOrCreateCustomer(userId, orgId);
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
