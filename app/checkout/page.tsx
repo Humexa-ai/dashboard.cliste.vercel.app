@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { SignedIn, SignedOut, RedirectToSignIn, ClerkLoaded } from "@clerk/nextjs";
+import { SignedIn, SignedOut, RedirectToSignIn, ClerkLoaded, useOrganization } from "@clerk/nextjs";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { CheckoutProvider, useCheckout, PaymentElementProvider, PaymentElement, usePaymentElement } from "@clerk/nextjs/experimental";
@@ -26,6 +26,7 @@ function CheckoutClient() {
   const search = useSearchParams();
   const planId = search.get("planId") || "";
   const router = useRouter();
+  const { organization } = useOrganization();
 
   if (!planId) {
     // If plan not provided, go back to plan selection
@@ -38,9 +39,18 @@ function CheckoutClient() {
         <RedirectToSignIn />
       </SignedOut>
       <SignedIn>
-        <CheckoutProvider for="organization" planId={planId} planPeriod="month">
+        {!organization ? (
+          <main className="min-h-screen grid place-items-center bg-[#0a0a0a] text-white p-6">
+            <div className="w-full max-w-xl rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6 text-center">
+              <p className="mb-4">No organization selected. Please create or select an organization first.</p>
+              <button onClick={() => router.push("/org/profile")} className="px-4 py-2 rounded-lg bg-white text-black">Open organization settings</button>
+            </div>
+          </main>
+        ) : (
+        <CheckoutProvider for="organization" organizationId={organization.id} planId={planId} planPeriod="month">
           <CheckoutShell />
         </CheckoutProvider>
+        )}
       </SignedIn>
     </ClerkLoaded>
   );
