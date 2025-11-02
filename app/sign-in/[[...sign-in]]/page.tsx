@@ -145,7 +145,13 @@ export default function LoginCardSection() {
 
       {/* Card */}
       <div className="h-full w-full grid place-items-center px-4">
-        <form onSubmit={handleSubmit} className="card-animate w-full max-w-sm border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
+        <div className="relative w-full max-w-sm">
+          {/* Logo outside the card, centered above */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-4">
+            <img src="/cliste-logo.png" alt="Cliste" className="h-10 w-auto" />
+          </div>
+
+          <form onSubmit={handleSubmit} className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
           <div className="space-y-1 mb-5 text-center">
             <h1 className="text-2xl font-semibold">Welcome back</h1>
             <p className="text-zinc-400">Sign in to your account</p>
@@ -160,10 +166,7 @@ export default function LoginCardSection() {
               </div>
             </div>
 
-            {/* Centered logo between email and password */}
-            <div className="flex justify-center py-2">
-              <img src="/cliste-logo.png" alt="Cliste" className="h-8 w-auto" />
-            </div>
+            {/* Logo moved outside the card */}
 
             <div className="grid gap-2">
               <label htmlFor="password" className="text-zinc-300">Password</label>
@@ -182,7 +185,8 @@ export default function LoginCardSection() {
 
             {/* OAuth options removed */}
           </div>
-        </form>
+          </form>
+        </div>
       </div>
     </section>
   );
