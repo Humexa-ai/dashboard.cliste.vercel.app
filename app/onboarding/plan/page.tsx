@@ -71,11 +71,9 @@ export default function PlanSelectionPage() {
     };
   }, []);
 
-  const startCheckout = async (plan: string) => {
-    setLoadingPlan(plan)
-    // With Clerk Billing, plans are selected within Clerk UI.
-    // Send user to organization profile where Billing is enabled.
-    window.location.href = "/org/profile"
+  const startCheckout = async (planId: string) => {
+    setLoadingPlan(planId)
+    window.location.href = `/checkout?planId=${encodeURIComponent(planId)}`
   }
 
   return (
@@ -146,14 +144,14 @@ export default function PlanSelectionPage() {
                     {displayPlans.map((plan) => (
                       <button
                         key={plan.id}
-                        onClick={() => startCheckout(plan.name)}
+                        onClick={() => startCheckout(plan.id)}
                         disabled={!!loadingPlan}
                         className="text-left rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 p-4 disabled:opacity-60"
                       >
                         <div className="flex items-baseline justify-between">
                           <span className="text-lg font-medium text-zinc-100">{plan.name}</span>
                         </div>
-                        <div className="mt-1 text-sm text-zinc-400">{loadingPlan === plan.name ? "Opening billing..." : (plan?.description || "")}</div>
+                        <div className="mt-1 text-sm text-zinc-400">{loadingPlan === plan.id ? "Opening checkout..." : (plan?.description || "")}</div>
                       </button>
                     ))}
                   </div>
