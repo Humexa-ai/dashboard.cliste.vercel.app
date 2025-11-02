@@ -11,7 +11,7 @@ export default function LoginCardSection() {
   const { isSignedIn } = useAuth();
   const search = useSearchParams();
   const redirectParam = search.get("redirect_url");
-  const redirectUrl = "/dashboard";
+  const redirectUrl = "/org/profile";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

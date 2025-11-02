@@ -22,7 +22,7 @@ export default function RootLayout({
     <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       signInUrl="/sign-in"
-      afterSignInUrl="/dashboard"
+      afterSignInUrl="/org/profile"
       signUpUrl="/sign-up"
       afterSignUpUrl="/org/profile"
     >
