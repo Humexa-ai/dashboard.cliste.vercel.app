@@ -146,12 +146,9 @@ export default function LoginCardSection() {
       {/* Card */}
       <div className="h-full w-full grid place-items-center px-4">
         <form onSubmit={handleSubmit} className="card-animate w-full max-w-sm border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
-          <div className="space-y-1 mb-5">
-            <div className="flex items-center justify-center gap-2">
-              <h1 className="text-2xl font-semibold">Welcome back</h1>
-              <img src="/cliste-logo.png" alt="Cliste" className="h-6 w-auto align-middle ml-1" />
-            </div>
-            <p className="text-zinc-400 text-center">Sign in to your account</p>
+          <div className="space-y-1 mb-5 text-center">
+            <h1 className="text-2xl font-semibold">Welcome back</h1>
+            <p className="text-zinc-400">Sign in to your account</p>
           </div>
 
           <div className="grid gap-5">
@@ -161,6 +158,11 @@ export default function LoginCardSection() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
                 <input id="email" type="email" required value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com" className="pl-10 w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
               </div>
+            </div>
+
+            {/* Centered logo between email and password */}
+            <div className="flex justify-center py-2">
+              <img src="/cliste-logo.png" alt="Cliste" className="h-8 w-auto" />
             </div>
 
             <div className="grid gap-2">
