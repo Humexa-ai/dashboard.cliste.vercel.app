@@ -1,6 +1,5 @@
 "use client";
 
-import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
 
 export default function PlanSelectionPage() {
@@ -62,11 +61,6 @@ export default function PlanSelectionPage() {
   }
 
   return (
-    <>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-      <SignedIn>
         <section className="fixed inset-0 bg-zinc-950 text-zinc-50">
           <style>{`
             .accent-lines{position:absolute;inset:0;pointer-events:none;opacity:.7}
@@ -146,8 +140,6 @@ export default function PlanSelectionPage() {
             </div>
           </div>
         </section>
-      </SignedIn>
-    </>
   );
 }
 
