@@ -17,7 +17,7 @@ async function getCustomerId(userId: string, orgId?: string | null) {
 }
 
 export async function POST(req: NextRequest) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!process.env.STRIPE_SECRET_KEY)
     return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
