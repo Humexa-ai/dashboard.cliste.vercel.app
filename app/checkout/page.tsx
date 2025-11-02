@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { SignedIn, SignedOut, RedirectToSignIn, ClerkLoaded } from "@clerk/nextjs";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -7,7 +8,21 @@ import { SignedIn, SignedOut, RedirectToSignIn, ClerkLoaded } from "@clerk/nextj
 import { CheckoutProvider, useCheckout, PaymentElementProvider, PaymentElement, usePaymentElement } from "@clerk/nextjs/experimental";
 import * as React from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen grid place-items-center bg-[#0a0a0a] text-white p-6">
+        <div className="w-full max-w-xl rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6 text-center">Loading checkout…</div>
+      </main>
+    }>
+      <CheckoutClient />
+    </Suspense>
+  );
+}
+
+function CheckoutClient() {
   const search = useSearchParams();
   const planId = search.get("planId") || "";
   const router = useRouter();
