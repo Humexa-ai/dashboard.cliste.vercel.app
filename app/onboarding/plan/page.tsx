@@ -2,14 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-// Clerk prebuilt PricingTable for hosted checkout
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { PricingTable } from "@clerk/nextjs/experimental";
+import { SignedIn, SignedOut, PricingTable, useOrganization } from "@clerk/nextjs";
+import { useEffect as useClientEffect } from "react";
 
 export default function PlanSelectionPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { organization } = useOrganization();
+
+  // If signed in but no organization selected, send user to org profile first
+  useClientEffect(() => {
+    if (organization === null) {
+      window.location.href = "/org/profile";
+    }
+  }, [organization]);
 
   // reuse subtle particles background
   useEffect(() => {
@@ -117,7 +122,7 @@ export default function PlanSelectionPage() {
                 </div>
                 <SignedOut>
                   <div className="text-center">
-                    <Link href="/sign-in?redirect_url=/onboarding/plan" className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200">
+                    <Link href="/sign-in?redirect_url=/org/profile" className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200">
                       Sign in to choose a plan
                     </Link>
                   </div>
@@ -125,18 +130,9 @@ export default function PlanSelectionPage() {
 
                 <SignedIn>
                   <div className="max-w-4xl mx-auto">
-                    {/* Guard: Some Clerk versions may not export PricingTable */}
-                    {typeof PricingTable === "function" ? (
-                      // @ts-ignore
-                      <PricingTable for="organization" redirectUrl="/dashboard" />
-                    ) : (
-                      <div className="text-center">
-                        <p className="text-zinc-300 mb-3">Billing checkout is unavailable in this environment.</p>
-                        <Link href="/org/profile" className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200">Open Billing</Link>
-                      </div>
-                    )}
+                    <PricingTable for="organization" redirectUrl="/dashboard" />
                   </div>
-                  <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing and checkout is hosted by Clerk.</div>
+                  <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing. After subscribing you will be redirected to your dashboard.</div>
                 </SignedIn>
               </div>
             </div>
