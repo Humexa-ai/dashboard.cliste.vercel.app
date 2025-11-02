@@ -130,7 +130,7 @@ export default function PlanSelectionPage() {
 
                 <SignedIn>
                   <div className="max-w-4xl mx-auto">
-                    <PricingTable for="organization" redirectUrl="/dashboard" />
+                    <PricingTable for="organization" />
                   </div>
                   <div className="mt-6 text-center text-xs text-zinc-500">Plans are managed in Clerk Billing. After subscribing you will be redirected to your dashboard.</div>
                 </SignedIn>

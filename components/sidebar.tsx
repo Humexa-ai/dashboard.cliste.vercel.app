@@ -21,14 +21,12 @@ import Link from "next/link"
 import { useState } from "react"
 import Image from "next/image"
 import { useOrganization, useUser, SignOutButton } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { organization } = useOrganization()
   const { user } = useUser()
   const [billingLoading, setBillingLoading] = useState(false)
-  const router = useRouter()
 
   function handleNavigation() {
     setIsMobileMenuOpen(false)
@@ -55,9 +53,9 @@ export default function Sidebar() {
     )
   }
 
-  function openBillingPortal() {
+  async function openBillingPortal() {
     setBillingLoading(true)
-    router.push("/org/profile")
+    window.location.href = "/org/profile"
   }
 
   return (
