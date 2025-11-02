@@ -147,8 +147,8 @@ export default function LoginCardSection() {
       <div className="h-full w-full grid place-items-center px-4">
         <div className="relative w-full max-w-sm">
           {/* Logo outside the card, centered above */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-4">
-            <img src="/cliste-logo.png" alt="Cliste" className="h-10 w-auto" />
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-6">
+            <img src="/cliste-logo.png" alt="Cliste" className="h-20 w-auto" />
           </div>
 
           <form onSubmit={handleSubmit} className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
