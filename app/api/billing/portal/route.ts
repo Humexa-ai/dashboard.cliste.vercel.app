@@ -3,13 +3,14 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { stripe } from "@/lib/stripe";
 
 async function getCustomerId(userId: string, orgId?: string | null) {
+  const clerk = await clerkClient();
   if (orgId) {
-    const org = await clerkClient.organizations.getOrganization({ organizationId: orgId });
-    const existing = (org.privateMetadata as any)?.stripeCustomerId as string | undefined;
+    const org = await clerk.organizations.getOrganization({ organizationId: orgId });
+    const existing = (org.privateMetadata as Record<string, unknown> | undefined)?.stripeCustomerId as string | undefined;
     if (existing) return existing;
   } else {
-    const user = await clerkClient.users.getUser(userId);
-    const existing = (user.privateMetadata as any)?.stripeCustomerId as string | undefined;
+    const user = await clerk.users.getUser(userId);
+    const existing = (user.privateMetadata as Record<string, unknown> | undefined)?.stripeCustomerId as string | undefined;
     if (existing) return existing;
   }
   return null;

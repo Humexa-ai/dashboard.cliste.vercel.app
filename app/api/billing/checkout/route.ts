@@ -12,27 +12,28 @@ function getPriceIdForPlan(plan: string | undefined): string | null {
 }
 
 async function getOrCreateCustomer(userId: string, orgId?: string | null) {
+  const clerk = await clerkClient();
   if (orgId) {
-    const org = await clerkClient.organizations.getOrganization({ organizationId: orgId });
-    const existing = (org.privateMetadata as any)?.stripeCustomerId as string | undefined;
+    const org = await clerk.organizations.getOrganization({ organizationId: orgId });
+    const existing = (org.privateMetadata as Record<string, unknown> | undefined)?.stripeCustomerId as string | undefined;
     if (existing) return existing;
 
-    const ownerUserId = org.createdBy ?? userId;
-    const owner = await clerkClient.users.getUser(ownerUserId);
+    const ownerUserId = (org as any).createdBy ?? userId;
+    const owner = await clerk.users.getUser(ownerUserId);
     const email = owner.emailAddresses?.[0]?.emailAddress;
     const customer = await stripe.customers.create({
       name: org.name || undefined,
       email: email || undefined,
       metadata: { clerk_org_id: org.id, clerk_org_name: org.name || "" },
     });
-    await clerkClient.organizations.updateOrganizationMetadata(org.id, {
+    await clerk.organizations.updateOrganizationMetadata(org.id, {
       privateMetadata: { ...(org.privateMetadata as object), stripeCustomerId: customer.id },
     });
     return customer.id;
   }
 
-  const user = await clerkClient.users.getUser(userId);
-  const existing = (user.privateMetadata as any)?.stripeCustomerId as string | undefined;
+  const user = await clerk.users.getUser(userId);
+  const existing = (user.privateMetadata as Record<string, unknown> | undefined)?.stripeCustomerId as string | undefined;
   if (existing) return existing;
 
   const email = user.emailAddresses?.[0]?.emailAddress;
@@ -42,7 +43,7 @@ async function getOrCreateCustomer(userId: string, orgId?: string | null) {
     email: email || undefined,
     metadata: { clerk_user_id: userId },
   });
-  await clerkClient.users.updateUser(userId, {
+  await clerk.users.updateUser(userId, {
     privateMetadata: { ...(user.privateMetadata as object), stripeCustomerId: customer.id },
   });
   return customer.id;
