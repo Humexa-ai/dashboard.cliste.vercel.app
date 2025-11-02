@@ -1,12 +1,13 @@
 "use client";
 
-import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser, useOrganization } from "@clerk/nextjs";
 import Link from "next/link";
 import KpiCard from "@/components/dashboard/KpiCard";
 import SectionCard from "@/components/dashboard/SectionCard";
 
 function DashboardContent() {
   const { user } = useUser();
+  const { organization } = useOrganization();
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Top bar */}
@@ -27,7 +28,11 @@ function DashboardContent() {
       <main className="mx-auto max-w-7xl px-6 py-8">
         {/* Greeting */}
         <div className="mb-6 text-white/70 text-sm">
-          Signed in as {user?.emailAddresses?.[0]?.emailAddress}
+          {organization?.name ? (
+            <>Signed in to {organization.name}</>
+          ) : (
+            <>Signed in as {user?.emailAddresses?.[0]?.emailAddress}</>
+          )}
         </div>
 
         {/* KPIs */}
