@@ -13,9 +13,7 @@ export default clerkMiddleware(async (auth, req) => {
   if (!isPublicRoute(req)) {
     const { userId } = await auth();
     if (!userId) {
-      const url = new URL("/sign-in", req.url);
-      url.searchParams.set("redirect_url", req.url);
-      return NextResponse.redirect(url);
+      return NextResponse.redirect(new URL("/sign-in", req.url));
     }
   }
   return NextResponse.next();
@@ -24,6 +22,8 @@ export default clerkMiddleware(async (auth, req) => {
 export const config = {
   matcher: ["/((?!_next|.*\\..*).*)"],
 };
+
+
 
 
 
