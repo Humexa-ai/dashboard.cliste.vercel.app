@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 import Profile01 from "./profile-01"
 import Link from "next/link"
-import { UserButton, useOrganization, useUser, useOrganizationList } from "@clerk/nextjs"
+import { UserButton, useOrganization, useUser } from "@clerk/nextjs"
 
 interface BreadcrumbItem {
   label: string
@@ -15,7 +15,6 @@ interface BreadcrumbItem {
 export default function TopNav() {
   const { organization } = useOrganization()
   const { user } = useUser()
-  const { organizationList, isLoaded: orgsLoaded } = useOrganizationList()
   const today = new Date()
   const dateLabel = today.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -52,7 +51,7 @@ export default function TopNav() {
 
 
       <div className="flex items-center gap-3 sm:gap-4 ml-auto sm:ml-0">
-        <span className="hidden sm:block text-sm text-gray-700">Logged in as {organization?.name || (orgsLoaded && organizationList?.[0]?.organization?.name) || user?.fullName || user?.emailAddresses?.[0]?.emailAddress}</span>
+        <span className="hidden sm:block text-sm text-gray-700">Logged in as {organization?.name || user?.fullName || user?.emailAddresses?.[0]?.emailAddress}</span>
         <UserButton appearance={{ elements: { avatarBox: "h-8 w-8" } }} />
       </div>
     </nav>
