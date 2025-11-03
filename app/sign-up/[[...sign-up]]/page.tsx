@@ -3,15 +3,17 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useSignUp } from "@clerk/nextjs";
+import { useSignUp, useOrganizationList } from "@clerk/nextjs";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function SignUpPage() {
-  const { isLoaded, signUp, setActive } = useSignUp();
+  const { isLoaded, signUp, setActive: setActiveSession } = useSignUp();
+  const { createOrganization, setActive: setActiveOrganization } = useOrganizationList();
   const search = useSearchParams();
-  const redirectUrl = search.get("redirect_url") || "/org/profile";
+  const redirectUrl = search.get("redirect_url") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [orgName, setOrgName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -90,7 +92,15 @@ export default function SignUpPage() {
     try {
       const res = await signUp.attemptEmailAddressVerification({ code });
       if (res.status === "complete") {
-        await setActive({ session: res.createdSessionId });
+        await setActiveSession({ session: res.createdSessionId });
+        if (orgName.trim().length > 0 && createOrganization && setActiveOrganization) {
+          try {
+            const org = await createOrganization({ name: orgName.trim() });
+            await setActiveOrganization({ organization: org.id });
+          } catch (orgErr) {
+            // If org creation fails, still continue to redirect; user can create later
+          }
+        }
         window.location.href = redirectUrl;
       }
     } catch (err: any) {
@@ -159,6 +169,10 @@ export default function SignUpPage() {
               </div>
 
               <div className="grid gap-5">
+                <div className="grid gap-2">
+                  <label htmlFor="org" className="text-zinc-300">Organization name</label>
+                  <input id="org" type="text" value={orgName} onChange={(e)=>setOrgName(e.target.value)} placeholder="Your company / team" className="w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 px-3 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
+                </div>
                 <div className="grid gap-2">
                   <label htmlFor="email" className="text-zinc-300">Email</label>
                   <div className="relative">

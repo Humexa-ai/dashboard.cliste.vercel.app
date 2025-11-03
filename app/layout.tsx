@@ -22,9 +22,9 @@ export default function RootLayout({
     <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       signInUrl="/sign-in"
-      afterSignInUrl="/org/profile"
+      afterSignInUrl="/dashboard"
       signUpUrl="/sign-up"
-      afterSignUpUrl="/org/profile"
+      afterSignUpUrl="/dashboard"
     >
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
             {children}
