@@ -93,22 +93,30 @@ export default function SignUpPage() {
       const res = await signUp.attemptEmailAddressVerification({ code });
       if (res.status === "complete") {
         await setActiveSession({ session: res.createdSessionId });
-        // Try to create & activate organization immediately after session is active
+        // Create organization via server to avoid client hydration timing issues
         if (orgName.trim().length > 0) {
           try {
-            // Wait briefly for organization list APIs to load post-session activation
-            let attempts = 0;
-            while ((!createOrganization || !setActiveOrganization) && attempts < 20) {
-              attempts++;
-              await new Promise((r) => setTimeout(r, 100));
-            }
-            if (createOrganization && setActiveOrganization) {
-              const org = await createOrganization({ name: orgName.trim() });
-              await setActiveOrganization({ organization: org.id });
+            const response = await fetch("/api/org/create", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name: orgName.trim() }),
+            });
+            if (response.ok) {
+              const data = await response.json();
+              // Try to set active org if available; non-blocking
+              try {
+                let attempts = 0;
+                while ((!setActiveOrganization) && attempts < 20) {
+                  attempts++;
+                  await new Promise((r) => setTimeout(r, 100));
+                }
+                if (setActiveOrganization && data?.id) {
+                  await setActiveOrganization({ organization: data.id });
+                }
+              } catch {}
             }
           } catch (orgErr: any) {
-            // Surface a non-blocking message for troubleshooting
-            console.error("Organization creation failed", orgErr);
+            console.error("Organization creation (server) failed", orgErr);
           }
         }
         window.location.href = redirectUrl;
