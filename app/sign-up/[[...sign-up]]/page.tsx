@@ -8,7 +8,7 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive: setActiveSession } = useSignUp();
-  const { createOrganization, setActive: setActiveOrganization } = useOrganizationList();
+  const { createOrganization, setActive: setActiveOrganization, isLoaded: orgListLoaded } = useOrganizationList();
   const search = useSearchParams();
   const redirectUrl = search.get("redirect_url") || "/dashboard";
   const [email, setEmail] = useState("");
@@ -93,12 +93,21 @@ export default function SignUpPage() {
       const res = await signUp.attemptEmailAddressVerification({ code });
       if (res.status === "complete") {
         await setActiveSession({ session: res.createdSessionId });
-        if (orgName.trim().length > 0 && createOrganization && setActiveOrganization) {
+        // Try to create & activate organization immediately after session is active
+        if (orgName.trim().length > 0) {
           try {
-            const org = await createOrganization({ name: orgName.trim() });
-            await setActiveOrganization({ organization: org.id });
-          } catch (orgErr) {
-            // If org creation fails, still continue to redirect; user can create later
+            // Wait briefly for organization list APIs to load post-session activation
+            let attempts = 0;
+            while ((!createOrganization || !setActiveOrganization) && attempts < 20) {
+              attempts++;
+              await new Promise((r) => setTimeout(r, 100));
+            }
+            if (createOrganization && setActiveOrganization) {
+              const org = await createOrganization({ name: orgName.trim() });
+              await setActiveOrganization({ organization: org.id });
+            }
+          } catch {
+            // Non-fatal; user can set org later
           }
         }
         window.location.href = redirectUrl;
@@ -171,7 +180,7 @@ export default function SignUpPage() {
               <div className="grid gap-5">
                 <div className="grid gap-2">
                   <label htmlFor="org" className="text-zinc-300">Organization name</label>
-                  <input id="org" type="text" value={orgName} onChange={(e)=>setOrgName(e.target.value)} placeholder="Your company / team" className="w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 px-3 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
+                  <input id="org" type="text" required value={orgName} onChange={(e)=>setOrgName(e.target.value)} placeholder="Your company / team" className="w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 px-3 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
                 </div>
                 <div className="grid gap-2">
                   <label htmlFor="email" className="text-zinc-300">Email</label>
