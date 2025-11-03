@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 import Profile01 from "./profile-01"
 import Link from "next/link"
-import { UserButton, useOrganization, useUser } from "@clerk/nextjs"
+import { UserButton, useOrganization, useUser, useOrganizationList } from "@clerk/nextjs"
 
 interface BreadcrumbItem {
   label: string
@@ -15,7 +15,8 @@ interface BreadcrumbItem {
 export default function TopNav() {
   const { organization } = useOrganization()
   const { user } = useUser()
-  const orgDisplayName = organization?.name || (user as any)?.organizationMemberships?.[0]?.organization?.name
+  const { userMemberships, isLoaded: orgsLoaded } = useOrganizationList()
+  const orgDisplayName = organization?.name || (orgsLoaded ? userMemberships?.data?.[0]?.organization?.name : undefined)
   const today = new Date()
   const dateLabel = today.toLocaleDateString("en-GB", {
     day: "2-digit",

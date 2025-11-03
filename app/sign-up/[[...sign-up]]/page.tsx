@@ -106,8 +106,9 @@ export default function SignUpPage() {
               const org = await createOrganization({ name: orgName.trim() });
               await setActiveOrganization({ organization: org.id });
             }
-          } catch {
-            // Non-fatal; user can set org later
+          } catch (orgErr: any) {
+            // Surface a non-blocking message for troubleshooting
+            console.error("Organization creation failed", orgErr);
           }
         }
         window.location.href = redirectUrl;
