@@ -15,6 +15,7 @@ interface BreadcrumbItem {
 export default function TopNav() {
   const { organization } = useOrganization()
   const { user } = useUser()
+  const orgDisplayName = organization?.name || (user as any)?.organizationMemberships?.[0]?.organization?.name
   const today = new Date()
   const dateLabel = today.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -51,7 +52,7 @@ export default function TopNav() {
 
 
       <div className="flex items-center gap-3 sm:gap-4 ml-auto sm:ml-0">
-        <span className="hidden sm:block text-sm text-gray-700">Logged in as {organization?.name || user?.fullName || user?.emailAddresses?.[0]?.emailAddress}</span>
+        <span className="hidden sm:block text-sm text-gray-700">Logged in as {orgDisplayName || user?.fullName || user?.emailAddresses?.[0]?.emailAddress}</span>
         <UserButton appearance={{ elements: { avatarBox: "h-8 w-8" } }} />
       </div>
     </nav>
