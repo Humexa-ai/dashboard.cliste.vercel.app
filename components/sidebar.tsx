@@ -26,7 +26,6 @@ export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { organization } = useOrganization()
   const { user } = useUser()
-  const [billingLoading, setBillingLoading] = useState(false)
 
   function handleNavigation() {
     setIsMobileMenuOpen(false)
@@ -53,10 +52,7 @@ export default function Sidebar() {
     )
   }
 
-  async function openBillingPortal() {
-    setBillingLoading(true)
-    window.location.href = "/org/profile"
-  }
+  // removed billing portal
 
   return (
     <>
@@ -155,15 +151,6 @@ export default function Sidebar() {
           </div>
 
           <div className="px-4 py-4 border-t border-white/10 space-y-2">
-            <button
-              type="button"
-              onClick={openBillingPortal}
-              disabled={billingLoading}
-              className="flex w-full items-center px-3 py-2 text-sm rounded-md transition-colors text-white/70 hover:text-white hover:bg-white/5 cursor-pointer select-none disabled:opacity-60"
-            >
-              <CreditCard className="h-4 w-4 mr-3 flex-shrink-0" />
-              {billingLoading ? "Opening Billing..." : "Manage Billing"}
-            </button>
             <SignOutButton signOutOptions={{ redirectUrl: "/sign-in" }}>
               <div className="flex w-full items-center px-3 py-2 text-sm rounded-md transition-colors text-white/70 hover:text-white hover:bg-white/5 cursor-pointer select-none">
                 <LogOut className="h-4 w-4 mr-3 flex-shrink-0" />
