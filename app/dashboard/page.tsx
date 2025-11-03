@@ -1,5 +1,10 @@
 import Dashboard from "@/components/kokonutui/dashboard"
+import { SignedIn } from "@clerk/nextjs"
 
 export default function DashboardPage() {
-  return <Dashboard />
+  return (
+    <SignedIn>
+      <Dashboard />
+    </SignedIn>
+  )
 }
