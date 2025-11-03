@@ -93,12 +93,16 @@ export default function SignUpPage() {
       const res = await signUp.attemptEmailAddressVerification({ code });
       if (res.status === "complete") {
         await setActiveSession({ session: res.createdSessionId });
+        // Give the browser a moment to persist session cookies before calling API
+        await new Promise((r) => setTimeout(r, 200));
         // Create organization via server to avoid client hydration timing issues
         if (orgName.trim().length > 0) {
           try {
             const response = await fetch("/api/org/create", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              cache: "no-store",
               body: JSON.stringify({ name: orgName.trim() }),
             });
             if (response.ok) {
@@ -114,6 +118,9 @@ export default function SignUpPage() {
                   await setActiveOrganization({ organization: data.id });
                 }
               } catch {}
+            } else {
+              const errJson = await response.json().catch(() => ({}));
+              console.error("Create org failed:", errJson);
             }
           } catch (orgErr: any) {
             console.error("Organization creation (server) failed", orgErr);
