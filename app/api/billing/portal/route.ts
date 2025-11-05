@@ -43,6 +43,10 @@ export async function POST(req: NextRequest) {
       await supabase.auth.updateUser({ data: { stripe_customer_id: customerId } });
     }
 
+    if (!customerId) {
+      return NextResponse.json({ error: "Failed to create or retrieve customer" }, { status: 500 });
+    }
+
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${origin}/dashboard`,
@@ -90,6 +94,10 @@ export async function GET(req: NextRequest) {
       });
       customerId = customer.id;
       await supabase.auth.updateUser({ data: { stripe_customer_id: customerId } });
+    }
+
+    if (!customerId) {
+      return NextResponse.redirect(new URL("/dashboard?billing_error=1", req.url));
     }
 
     const session = await stripe.billingPortal.sessions.create({
