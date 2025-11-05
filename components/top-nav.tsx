@@ -5,7 +5,8 @@ import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 import Profile01 from "./profile-01"
 import Link from "next/link"
-import { UserButton, useOrganization, useUser, useOrganizationList } from "@clerk/nextjs"
+import { useEffect, useState } from "react"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 
 interface BreadcrumbItem {
   label: string
@@ -13,10 +14,30 @@ interface BreadcrumbItem {
 }
 
 export default function TopNav() {
-  const { organization } = useOrganization()
-  const { user } = useUser()
-  const { userMemberships, isLoaded: orgsLoaded } = useOrganizationList()
-  const orgDisplayName = organization?.name || (orgsLoaded ? userMemberships?.data?.[0]?.organization?.name : undefined)
+  const [companyLabel, setCompanyLabel] = useState<string | null>(null)
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient()
+    supabase.auth.getUser().then(({ data }) => {
+      const user = data?.user
+      const meta: any = user?.user_metadata || {}
+      let name: string | undefined = meta.companyName || undefined
+      if (!name) {
+        const fn = meta.firstName || ""
+        const ln = meta.lastName || ""
+        const full = `${fn} ${ln}`.trim()
+        if (full) name = full
+      }
+      if (name) {
+        const low = name.trim().toLowerCase()
+        if (!/(?:\s|^)(limited|ltd)\s*$/.test(low)) {
+          name = `${name.trim()} Limited`
+        }
+        setCompanyLabel(name)
+      } else if (user?.email) {
+        setCompanyLabel(user.email)
+      }
+    })
+  }, [])
   const today = new Date()
   const dateLabel = today.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -53,8 +74,14 @@ export default function TopNav() {
 
 
       <div className="flex items-center gap-3 sm:gap-4 ml-auto sm:ml-0">
-        <span className="hidden sm:block text-sm text-gray-700">Logged in as {orgDisplayName || user?.fullName || user?.emailAddresses?.[0]?.emailAddress}</span>
-        <UserButton appearance={{ elements: { avatarBox: "h-8 w-8" } }} />
+        {companyLabel ? (
+          <span className="text-sm text-gray-700">Signed into {companyLabel}</span>
+        ) : (
+          <>
+            <a href="/sign-in" className="text-sm text-gray-700 hover:underline">Sign in</a>
+            <a href="/sign-up" className="text-sm text-gray-700 hover:underline">Sign up</a>
+          </>
+        )}
       </div>
     </nav>
   )

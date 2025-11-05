@@ -1,14 +1,10 @@
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 
-const inter = Inter({ subsets: ["latin"] });
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Cliste Client Dashboard",
-  description: "Cliste Dashboard",
+  description: "Sign in to your Cliste account",
 };
 
 export default function RootLayout({
@@ -17,20 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-white text-neutral-900`}>
-    <ClerkProvider
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      signInUrl="/sign-in"
-      afterSignInUrl="/dashboard"
-      signUpUrl="/sign-up"
-      afterSignUpUrl="/dashboard"
-    >
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
-            {children}
-          </ThemeProvider>
-        </ClerkProvider>
-      </body>
-      </html>
+    <html lang="en">
+      <body className="bg-[#0a0a0a] text-white antialiased">{children}</body>
+    </html>
   );
 }

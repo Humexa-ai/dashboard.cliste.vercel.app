@@ -1,23 +1,24 @@
 "use client";
-
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { useSignIn, useAuth, SignIn } from "@clerk/nextjs";
-import { Eye, EyeOff, Github, Lock, Mail, ArrowRight, Chrome } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { Eye, EyeOff, Lock, Mail, Building2, User } from "lucide-react";
 
-export default function LoginCardSection() {
-  const { isLoaded, signIn, setActive } = useSignIn();
-  const { isSignedIn } = useAuth();
-  const search = useSearchParams();
-  const redirectUrl = "/dashboard"; // force dashboard to avoid redirect loops
+export default function SignUpPage() {
+  const router = useRouter();
+  const supabase = createSupabaseBrowserClient();
+  const [company, setCompany] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [pendingConfirmation, setPendingConfirmation] = useState(false);
 
-  // particles backdrop
+  // particles backdrop (same styling as sign-in)
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -65,40 +66,37 @@ export default function LoginCardSection() {
     };
   }, []);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      window.location.href = redirectUrl;
-    }
-  }, [isSignedIn, redirectUrl]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoaded) return;
     setError("");
     setLoading(true);
-    try {
-      const res = await signIn.create({ identifier: email, password });
-      if (res.status === "complete") {
-        await setActive({ session: res.createdSessionId });
-        window.location.href = redirectUrl;
-      } else {
-        setError("Check your email for verification.");
-      }
-    } catch (err: any) {
-      const code = err?.errors?.[0]?.code;
-      if (code === "form_identifier_not_found" || code === "form_password_incorrect" || code === "form_password_pwned") {
-        setError("Password or email address is incorrect.");
-      } else {
-        setError(err?.errors?.[0]?.message || "Sign in failed. Please try again.");
-      }
-    } finally {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { companyName: company, firstName, lastName }, emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) {
       setLoading(false);
+      setError(error.message);
+      return;
     }
+    // If email confirmations are enabled, no session will be returned
+    if (!data.session) {
+      setPendingConfirmation(true);
+      setLoading(false);
+      return;
+    }
+    router.replace("/dashboard");
   };
 
-  const oauth = async (strategy: "oauth_google" | "oauth_github") => {
-    if (!isLoaded) return;
-    await signIn.authenticateWithRedirect({ strategy, redirectUrl: "/sign-in", redirectUrlComplete: "/dashboard" });
+  const resendEmail = async () => {
+    setError("");
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    } as any);
+    if (error) setError(error.message);
   };
 
   return (
@@ -144,23 +142,46 @@ export default function LoginCardSection() {
       {/* Particles */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-50 mix-blend-screen pointer-events-none" />
 
-      {/* Header removed as requested */}
-
       {/* Card */}
-      <div className="h-full w-full grid place-items-center px-4">
+      <div className="h-full w-full grid place-items-center px-4 pt-8 md:pt-12">
         <div className="relative w-full max-w-sm">
           {/* Logo outside the card, centered above */}
           <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-6 card-animate">
-            <img src="/cliste-logo.png" alt="Cliste" className="h-20 w-auto" />
+            <img src="/cliste-logo.png" alt="Cliste" className="h-14 md:h-20 w-auto max-w-full" />
           </div>
 
-          <form onSubmit={handleSubmit} className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
+          {!pendingConfirmation ? (
+          <form onSubmit={onSubmit} className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6">
             <div className="space-y-1 mb-5 text-center">
-              <h1 className="text-2xl font-semibold">Welcome back</h1>
-              <p className="text-zinc-400">Sign in to your account</p>
+              <h1 className="text-2xl font-semibold">Create account</h1>
+              <p className="text-zinc-400">Sign up to get started</p>
             </div>
 
             <div className="grid gap-5">
+              <div className="grid gap-2">
+                <label htmlFor="company" className="text-zinc-300">Company name (LTD registered name)</label>
+                <div className="relative">
+                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                  <input id="company" type="text" required value={company} onChange={(e)=>setCompany(e.target.value)} placeholder="Registered LTD name" className="pl-10 w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <label htmlFor="first_name" className="text-zinc-300">First name</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                  <input id="first_name" type="text" required value={firstName} onChange={(e)=>setFirstName(e.target.value)} placeholder="John" className="pl-10 w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <label htmlFor="last_name" className="text-zinc-300">Last name</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                  <input id="last_name" type="text" required value={lastName} onChange={(e)=>setLastName(e.target.value)} placeholder="Doe" className="pl-10 w-full h-10 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-zinc-700" />
+                </div>
+              </div>
+
               <div className="grid gap-2">
                 <label htmlFor="email" className="text-zinc-300">Email</label>
                 <div className="relative">
@@ -182,12 +203,35 @@ export default function LoginCardSection() {
 
               {error && <div className="rounded-md border border-red-500/30 bg-red-500/10 text-red-400 text-sm px-3 py-2">{error}</div>}
 
-              <button type="submit" disabled={loading || !isLoaded} className="w-full h-10 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200 disabled:opacity-50">{loading?"Signing in...":"Continue"}</button>
+              <button type="submit" disabled={loading} className="w-full h-10 rounded-lg bg-zinc-50 text-zinc-900 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed relative">
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin"></div>
+                    <span>Creating account...</span>
+                  </div>
+                ) : (
+                  "Create account"
+                )}
+              </button>
+
+              <p className="text-center text-sm text-zinc-400">Already have an account? <a href="/sign-in" className="underline text-zinc-200">Sign in</a></p>
             </div>
           </form>
+          ) : (
+          <div className="card-animate w-full border border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60 rounded-xl p-6 text-center space-y-4">
+            <h1 className="text-2xl font-semibold">Verify your email</h1>
+            <p className="text-zinc-300">We sent a verification link to <span className="font-medium text-zinc-100">{email}</span>. Open it to finish creating your account.</p>
+            {error && <div className="rounded-md border border-red-500/30 bg-red-500/10 text-red-400 text-sm px-3 py-2 inline-block">{error}</div>}
+            <div className="flex gap-3 justify-center">
+              <button onClick={resendEmail} className="px-4 h-10 rounded-lg border border-zinc-700 hover:bg-zinc-800">Resend email</button>
+              <a href="/sign-in" className="px-4 h-10 rounded-lg bg-zinc-50 text-zinc-900 grid place-items-center">Back to sign in</a>
+            </div>
+          </div>
+          )}
         </div>
       </div>
     </section>
   );
 }
+
 

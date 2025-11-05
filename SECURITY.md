@@ -1,111 +1,61 @@
-# Security Documentation
+## Security Documentation
 
-## Authentication Setup with Clerk
+## Authentication Setup with Supabase
 
-This dashboard uses **Clerk** for authentication and security.
+This dashboard uses **Supabase** for authentication and security.
 
-### Security Features Implemented:
+### Overview
 
-#### 1. **Middleware Protection** ✅
-- All dashboard routes are protected at the middleware level
-- Unauthenticated users are automatically redirected to sign-in
-- Configured in `middleware.ts`
+Supabase provides:
+- Secure user authentication
+- JWT token management
+- Session handling
+- User metadata storage
+- Email verification
 
-#### 2. **Protected Routes** ✅
-The following routes require authentication:
-- `/` - Dashboard home
-- `/analytics` - Analytics page
-- `/users` - User management
-- `/documents` - Documents
-- `/notifications` - Notifications
-- `/settings` - Settings
+### Environment Variables
 
-#### 3. **Public Routes** ✅
-The following routes are publicly accessible:
-- `/sign-in` - Sign in page
-- `/sign-up` - Sign up page
-
-### Required Security Measures:
-
-#### 1. **Environment Variables**
-⚠️ **IMPORTANT**: Create a `.env.local` file with your Clerk keys:
+⚠️ **IMPORTANT**: Create a `.env.local` file with your Supabase keys:
 
 ```bash
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
-CLERK_SECRET_KEY=sk_test_your_secret_here
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
-**Never commit `.env.local` to git!**
+#### 2. **Get Your Supabase Keys**
 
-#### 2. **Get Your Clerk Keys**
-1. Go to [https://dashboard.clerk.com](https://dashboard.clerk.com)
-2. Create a new application (or use existing)
-3. Copy your keys from the API Keys section
-4. Add them to `.env.local`
+1. Go to [https://supabase.com](https://supabase.com)
+2. Sign in or create an account
+3. Create a new project
+4. Go to **Project Settings** → **API**
+5. Copy your **Project URL** and **anon/public key**
 
-#### 3. **Additional Security Best Practices**
+### Security Features
 
-##### Server-Side Security:
-- ✅ All protected routes verified by middleware
-- ✅ Clerk handles JWT token validation
-- ✅ Automatic token refresh
-- ✅ Secure session management
+- ✅ Protected routes via middleware
+- ✅ Automatic session validation
+- ✅ Secure cookie handling
+- ✅ JWT token validation
+- ✅ Server-side session checks
+- ✅ Client-side session management
 
-##### Client-Side Security:
-- ✅ UserButton component for profile management
-- ✅ Automatic sign-out on token expiry
-- ✅ Secure cookie handling by Clerk
+### How It Works
 
-##### Deployment Security:
-- Add environment variables to your hosting platform:
-  - Vercel: Project Settings > Environment Variables
-  - Netlify: Site Settings > Environment Variables
-  - Other platforms: Follow their documentation
+1. **Middleware Protection**: All `/dashboard` routes are protected
+2. **Session Check**: Server-side validation using Supabase `getSession()`
+3. **Automatic Redirect**: Unauthenticated users redirected to `/sign-in`
+4. **Token Validation**: Supabase validates JWT tokens automatically
+5. **Secure Cookie Handling**: Sessions stored in secure HTTP-only cookies
 
-#### 4. **Testing Authentication**
+### Security Best Practices
 
-1. Start the dev server: `npm run dev`
-2. Try accessing `/` without signing in - you'll be redirected
-3. Sign up at `/sign-up`
-4. Sign in at `/sign-in`
-5. Access the dashboard after authentication
-6. Use the UserButton in the sidebar to sign out
+1. **Rate Limiting**: Configure rate limits in Supabase dashboard
+2. **Email Verification**: Enable email verification in Supabase settings
+3. **Password Requirements**: Configure strong password requirements
+4. **Session Timeout**: Set appropriate session expiration times
+5. **Audit Logs**: Monitor authentication events in Supabase dashboard
 
-### Security Checklist:
+### Additional Resources
 
-- [x] Install Clerk package
-- [x] Set up middleware protection
-- [x] Add ClerkProvider to layout
-- [x] Create sign-in/sign-up pages
-- [x] Add UserButton to dashboard
-- [ ] **Add Clerk environment variables**
-- [ ] **Test authentication flow**
-- [ ] **Set up production environment**
-
-### Additional Security Recommendations:
-
-1. **Rate Limiting**: Configure Clerk rate limits in the dashboard
-2. **MFA**: Enable Multi-Factor Authentication in Clerk settings
-3. **Email Verification**: Enable email verification for new users
-4. **Password Policy**: Configure strong password requirements
-5. **Session Management**: Set appropriate session timeout
-6. **Audit Logs**: Monitor authentication events in Clerk
-7. **IP Restrictions**: Configure allowed IPs if needed
-8. **HSTS**: Use HTTPS in production
-9. **CSP Headers**: Add Content Security Policy headers
-10. **API Security**: If adding API routes, protect them with authentication
-
-### Need Help?
-
-- Clerk Documentation: [https://clerk.com/docs](https://clerk.com/docs)
-- Clerk Support: [https://clerk.com/support](https://clerk.com/support)
-
-
-
-
-
-
+- Supabase Documentation: [https://supabase.com/docs](https://supabase.com/docs)
+- Supabase Support: [https://supabase.com/support](https://supabase.com/support)

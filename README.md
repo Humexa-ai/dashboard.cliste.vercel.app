@@ -1,10 +1,10 @@
 # Cliste Dashboard
 
-A beautiful, modern dashboard with an animated sidebar built using Next.js, TypeScript, Tailwind CSS, and Framer Motion. **Secured with Clerk authentication.**
+A beautiful, modern dashboard with an animated sidebar built using Next.js, TypeScript, Tailwind CSS, and Framer Motion. **Secured with Supabase authentication.**
 
 ## Features
 
-- **🔐 Clerk Authentication**: Secure sign-in/sign-up with automatic session management
+- **🔐 Supabase Authentication**: Secure sign-in/sign-up with automatic session management
 - **Animated Sidebar**: Collapsible sidebar that expands on hover (desktop) or toggle (mobile)
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Dark Mode**: Full dark mode support
@@ -16,7 +16,7 @@ A beautiful, modern dashboard with an animated sidebar built using Next.js, Type
 ### Prerequisites
 
 - Node.js 18+ installed
-- A Clerk account ([sign up free](https://dashboard.clerk.com))
+- A Supabase account ([sign up free](https://supabase.com))
 
 ### Installation
 
@@ -25,14 +25,14 @@ A beautiful, modern dashboard with an animated sidebar built using Next.js, Type
 npm install
 ```
 
-2. **Set up Clerk authentication:**
-   - Sign up at [https://dashboard.clerk.com](https://dashboard.clerk.com)
-   - Create a new application
-   - Copy your API keys from the dashboard
+2. **Set up Supabase authentication:**
+   - Sign up at [https://supabase.com](https://supabase.com)
+   - Create a new project
+   - Copy your API keys from the project settings
    - Create a `.env.local` file in the root directory:
    ```bash
-   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
-   CLERK_SECRET_KEY=sk_test_your_secret_key_here
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
    ```
 
 3. **Run the development server:**

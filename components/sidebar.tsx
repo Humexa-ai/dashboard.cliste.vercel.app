@@ -20,12 +20,13 @@ import { Home } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import Image from "next/image"
-import { useOrganization, useUser, SignOutButton } from "@clerk/nextjs"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"
+// Removed Clerk dependencies
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { organization } = useOrganization()
-  const { user } = useUser()
+  const supabase = createSupabaseBrowserClient()
+  // Sidebar is static for now
 
   function handleNavigation() {
     setIsMobileMenuOpen(false)
@@ -151,12 +152,17 @@ export default function Sidebar() {
           </div>
 
           <div className="px-4 py-4 border-t border-white/10 space-y-2">
-            <SignOutButton signOutOptions={{ redirectUrl: "/sign-in" }}>
-              <div className="flex w-full items-center px-3 py-2 text-sm rounded-md transition-colors text-white/70 hover:text-white hover:bg-white/5 cursor-pointer select-none">
-                <LogOut className="h-4 w-4 mr-3 flex-shrink-0" />
-                Logout
-            </div>
-            </SignOutButton>
+            <button
+              type="button"
+              onClick={async () => {
+                await supabase.auth.signOut()
+                window.location.href = "/sign-in"
+              }}
+              className="flex w-full items-center px-3 py-2 text-sm rounded-md transition-colors text-white/70 hover:text-white hover:bg-white/5 cursor-pointer select-none"
+            >
+              <LogOut className="h-4 w-4 mr-3 flex-shrink-0" />
+              Logout
+            </button>
           </div>
         </div>
       </nav>

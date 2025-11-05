@@ -2,28 +2,28 @@
 
 ## ✅ Security Implementation Complete
 
-Your dashboard is now **fully secured** with Clerk authentication!
+Your dashboard is now **fully secured** with Supabase authentication!
 
 ### What's Been Implemented:
 
 1. **✅ Middleware Protection** - All routes protected at the server level
-2. **✅ Clerk Integration** - Using latest `@clerk/nextjs` App Router approach
-3. **✅ Sign In/Sign Up Pages** - Beautiful Clerk-hosted pages
-4. **✅ User Management** - UserButton in sidebar for profile/sign out
+2. **✅ Supabase Integration** - Using `@supabase/ssr` for App Router
+3. **✅ Sign In/Sign Up Pages** - Custom authentication pages
+4. **✅ User Management** - Session management and user metadata
 5. **✅ Environment Security** - `.env.local` configured and gitignored
 
 ---
 
 ## 🚀 Quick Start Guide
 
-### Step 1: Get Your Clerk Keys
+### Step 1: Get Your Supabase Keys
 
-1. Visit [https://dashboard.clerk.com](https://dashboard.clerk.com)
+1. Visit [https://supabase.com](https://supabase.com)
 2. Sign up or log in
-3. Click **"Add Application"** → **"Create Application"**
-4. Choose your authentication methods (Email, Google, etc.)
-5. Go to **"API Keys"** in the sidebar
-6. Copy your **Publishable Key** and **Secret Key**
+3. Click **"New Project"**
+4. Fill in your project details
+5. Go to **Project Settings** → **API**
+6. Copy your **Project URL** and **anon/public key**
 
 ### Step 2: Create Environment File
 
@@ -31,21 +31,17 @@ Create a file named `.env.local` in the **Cliste** folder:
 
 ```bash
 # .env.local
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
-CLERK_SECRET_KEY=sk_test_your_secret_key_here
-
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
-**⚠️ IMPORTANT:** Replace the placeholder keys with your actual Clerk keys!
+**⚠️ IMPORTANT:** Replace the placeholder keys with your actual Supabase keys!
 
 ### Step 3: Run the Development Server
 
 ```bash
 cd Cliste
+npm install
 npm run dev
 ```
 
@@ -55,7 +51,7 @@ npm run dev
 2. You'll be **automatically redirected** to `/sign-in`
 3. Click **"Sign up"** to create an account
 4. After signing in, you'll land on the dashboard
-5. Use the **UserButton** (bottom of sidebar) to sign out
+5. Use the **Logout** button in the sidebar to sign out
 
 ---
 
@@ -64,12 +60,8 @@ npm run dev
 ### Protected Routes
 
 These routes **require authentication** and will redirect to sign-in if not logged in:
-- `/` - Dashboard home
-- `/analytics`
-- `/users`
-- `/documents`
-- `/notifications`
-- `/settings`
+- `/dashboard` - Dashboard home
+- `/dashboard/*` - All dashboard sub-routes
 
 ### Public Routes
 
@@ -80,10 +72,10 @@ These routes are publicly accessible:
 ### How Security Works
 
 1. **Middleware Check**: Every request goes through `middleware.ts`
-2. **Protected Route Detection**: Uses `createRouteMatcher()` to identify protected routes
+2. **Session Validation**: Uses Supabase `getSession()` to check authentication
 3. **Automatic Redirect**: Unauthenticated users redirected to `/sign-in`
-4. **Token Validation**: Clerk validates JWT tokens automatically
-5. **Session Management**: Secure session handling by Clerk
+4. **Token Validation**: Supabase validates JWT tokens automatically
+5. **Session Management**: Secure session handling by Supabase
 
 ---
 
@@ -92,18 +84,23 @@ These routes are publicly accessible:
 ```
 Cliste/
 ├── app/
-│   ├── layout.tsx          # ClerkProvider wraps entire app
-│   ├── page.tsx            # Dashboard (protected)
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Home page (redirects to sign-in)
+│   ├── dashboard/
+│   │   ├── page.tsx        # Dashboard (protected)
+│   │   └── layout.tsx      # Dashboard layout
 │   ├── sign-in/
-│   │   └── [[...sign-in]]/
-│   │       └── page.tsx    # Sign in page (public)
+│   │   └── page.tsx        # Sign in page (public)
 │   └── sign-up/
-│       └── [[...sign-up]]/
-│           └── page.tsx    # Sign up page (public)
+│       └── page.tsx        # Sign up page (public)
 ├── middleware.ts           # Route protection logic
+├── lib/
+│   └── supabase/
+│       ├── client.ts       # Browser client
+│       └── server.ts       # Server client
 ├── components/
-│   └── sidebar.tsx        # Dashboard sidebar
-├── .env.local              # Your Clerk keys (not in git)
+│   └── sidebar.tsx         # Dashboard sidebar
+├── .env.local              # Your Supabase keys (not in git)
 └── .gitignore             # Excludes .env files
 ```
 
@@ -113,47 +110,38 @@ Cliste/
 
 ### Change Redirect URLs
 
-Edit `.env.local`:
-```bash
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/welcome
-```
+Edit `middleware.ts` to change redirect behavior after sign-in/sign-up.
 
 ### Add More Protected Routes
 
 Edit `middleware.ts`:
 ```typescript
-const isProtectedRoute = createRouteMatcher([
-  '/',
-  '/analytics(.*)',
-  '/users(.*)',
-  '/documents(.*)',
-  '/notifications(.*)',
-  '/settings(.*)',
-  '/admin(.*)',  // Add new protected route
-]);
+if (pathname.startsWith("/dashboard") && !session) {
+  // Redirect to sign-in
+}
 ```
 
 ### Customize Sign In/Up Pages
 
-Edit `app/sign-in/[[...sign-in]]/page.tsx` or `app/sign-up/[[...sign-up]]/page.tsx` to change appearance.
+Edit `app/sign-in/page.tsx` or `app/sign-up/page.tsx` to change appearance.
 
 ---
 
 ## 🚨 Troubleshooting
 
-### "Cannot find module '@clerk/nextjs'"
+### "Cannot find module '@supabase/ssr'"
 
 Run:
 ```bash
-npm install @clerk/nextjs
+npm install @supabase/ssr @supabase/supabase-js
 ```
 
 ### "Redirect loop" or "Unauthorized"
 
 1. Check your `.env.local` file exists
 2. Verify keys are correct (no extra spaces)
-3. Make sure you're using the latest version: `npm install @clerk/nextjs@latest`
+3. Make sure Supabase project is active
+4. Check middleware configuration
 
 ### Environment variables not loading
 
@@ -165,9 +153,9 @@ npm install @clerk/nextjs
 
 ## 📚 Additional Resources
 
-- [Clerk Documentation](https://clerk.com/docs)
+- [Supabase Documentation](https://supabase.com/docs)
 - [Next.js App Router Docs](https://nextjs.org/docs/app)
-- [Clerk Next.js Quickstart](https://clerk.com/docs/quickstarts/nextjs)
+- [Supabase Auth Quickstart](https://supabase.com/docs/guides/auth)
 
 ---
 
@@ -175,21 +163,14 @@ npm install @clerk/nextjs
 
 Before deploying, verify:
 
-- [ ] Clerk keys added to `.env.local`
+- [ ] Supabase keys added to `.env.local`
 - [ ] Sign up flow works
 - [ ] Sign in flow works
 - [ ] Protected routes redirect when logged out
-- [ ] UserButton displays in dashboard
-- [ ] Sign out works correctly
+- [ ] Logout works correctly
 - [ ] `.env.local` is in `.gitignore`
 - [ ] No real keys in any tracked files
 
 ---
 
 **Need Help?** Check `SECURITY.md` for detailed security information.
-
-
-
-
-
-
