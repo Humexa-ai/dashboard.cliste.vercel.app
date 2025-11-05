@@ -110,7 +110,7 @@ function SummaryCard({
   trendUp,
   period,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   value: string;
   trend: string;
