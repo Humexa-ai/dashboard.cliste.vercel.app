@@ -63,7 +63,7 @@ interface RippleEffectsProps {
 
 interface MenuButtonProps {
   toggleMenu: () => void;
-  menuRef: React.RefObject<HTMLDivElement>;
+  menuRef: React.RefObject<HTMLDivElement | null>;
   isMenuOpen: boolean;
   onSelectOption: (option: MenuOption) => void;
   textColor: string;
