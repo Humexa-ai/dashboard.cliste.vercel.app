@@ -54,24 +54,17 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
       ),
     },
     {
-      label: "Subscription",
-      href: "/api/billing/portal",
+      label: "AI Assistant",
+      href: "/dashboard/ai",
       icon: (
         <Sparkles className="text-white h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Billing",
-      href: "/api/billing/portal",
+      href: "/dashboard/billing",
       icon: (
         <CreditCard className="text-white h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Subscriptions",
-      href: "/dashboard/subscriptions",
-      icon: (
-        <Receipt className="text-white h-5 w-5 flex-shrink-0" />
       ),
     },
   ];

@@ -196,7 +196,7 @@ export default function CallsPage() {
               <button
                 key={category}
                 onClick={() => setCategoryFilter(category)}
-                className={`rounded-lg px-4 py-2 text-xs font-medium capitalize transition ${
+                className={`rounded-lg px-4 py-2 text-xs font-medium capitalize transition cursor-pointer ${
                   categoryFilter === category
                     ? "bg-blue-500 text-white"
                     : "bg-neutral-800/60 text-neutral-400 hover:bg-neutral-800 hover:text-white"
@@ -301,7 +301,7 @@ export default function CallsPage() {
                   <div className="border-t border-neutral-800/60">
                     <button
                       onClick={() => setExpandedTranscript(isExpanded ? null : call.id)}
-                      className="flex w-full items-center justify-between bg-neutral-900/60 px-4 py-3 text-left transition hover:bg-neutral-900"
+                      className="flex w-full items-center justify-between bg-neutral-900/60 px-4 py-3 text-left transition hover:bg-neutral-900 cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <MessageSquare className="h-4 w-4 text-neutral-400" />

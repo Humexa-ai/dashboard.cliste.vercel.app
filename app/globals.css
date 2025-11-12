@@ -119,6 +119,20 @@
   body {
     @apply bg-background text-foreground;
   }
+  button,
+  [type="button"],
+  [type="submit"],
+  [role="button"],
+  a {
+    @apply cursor-pointer;
+  }
+  button:disabled,
+  [type="button"]:disabled,
+  [type="submit"]:disabled,
+  [role="button"][aria-disabled="true"],
+  a[aria-disabled="true"] {
+    @apply cursor-not-allowed;
+  }
 }
 
 /* Auth0 demo UI styles */

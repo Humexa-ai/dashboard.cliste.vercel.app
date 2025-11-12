@@ -271,7 +271,7 @@ export default function BookingsPage() {
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`rounded-lg px-3 py-2 text-xs font-medium capitalize transition ${
+                className={`rounded-lg px-3 py-2 text-xs font-medium capitalize transition cursor-pointer ${
                   statusFilter === status
                     ? "bg-blue-500 text-white"
                     : "bg-neutral-800/60 text-neutral-400 hover:bg-neutral-800 hover:text-white"
@@ -288,7 +288,7 @@ export default function BookingsPage() {
               <button
                 key={service}
                 onClick={() => setServiceFilter(service)}
-                className={`rounded-lg px-3 py-2 text-xs font-medium capitalize transition ${
+                className={`rounded-lg px-3 py-2 text-xs font-medium capitalize transition cursor-pointer ${
                   serviceFilter === service
                     ? "bg-blue-500 text-white"
                     : "bg-neutral-800/60 text-neutral-400 hover:bg-neutral-800 hover:text-white"
@@ -374,7 +374,7 @@ export default function BookingsPage() {
                           <span className="text-lg font-semibold text-white">{booking.price}</span>
                           <button
                             onClick={() => setExpandedBooking(isExpanded ? null : booking.id)}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-800/60 text-neutral-400 transition hover:bg-neutral-800 hover:text-white"
+                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-800/60 text-neutral-400 transition hover:bg-neutral-800 hover:text-white cursor-pointer"
                           >
                             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                           </button>

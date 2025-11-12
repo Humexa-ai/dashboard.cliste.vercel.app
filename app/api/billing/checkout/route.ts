@@ -29,6 +29,18 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   let customerId = (user.user_metadata as any)?.stripe_customer_id as string | undefined;
+  
+  // Verify customer exists in current mode (test vs live)
+  if (customerId) {
+    try {
+      await stripe.customers.retrieve(customerId);
+    } catch (e: any) {
+      console.log("[Checkout] Clearing invalid customer ID:", customerId);
+      customerId = undefined;
+      await supabase.auth.updateUser({ data: { stripe_customer_id: null } });
+    }
+  }
+  
   if (!customerId) {
     const existing = user.email ? await stripe.customers.list({ email: user.email, limit: 1 }) : { data: [] as any[] };
     if (existing.data[0]) {
