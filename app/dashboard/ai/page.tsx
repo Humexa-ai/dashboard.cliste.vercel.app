@@ -229,7 +229,7 @@ export default function ClisteAIPage() {
           textColor="#FFFFFF"
           backgroundOpacity={0.15}
           showEffects={true}
-          menuOptions={["Analytics", "Insights", "Reports", "Trends"]}
+          menuOptions={["Auto", "Max", "Search", "Plan"]}
         />
       </div>
     </motion.div>
