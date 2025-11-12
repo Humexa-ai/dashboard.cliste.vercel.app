@@ -378,8 +378,8 @@ export default function ClisteAIInput({
   const [ripples, setRipples] = useState<RippleEffect[]>([]);
   const [mousePosition, setMousePosition] = useState<Position>({ x: 50, y: 50 });
   
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const throttleRef = useRef<number | null>(null);
 
   useEffect(() => {
