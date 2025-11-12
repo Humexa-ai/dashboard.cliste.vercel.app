@@ -198,7 +198,7 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
 export const Logo = () => {
   return (
     <Link
-      href="#"
+      href="/dashboard"
       className="flex items-center justify-center"
     >
       <Image
