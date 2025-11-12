@@ -1,13 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from "@/components/ui/sidebar";
-import { LayoutDashboard, UserCog, LogOut, MessagesSquare, Phone, Calendar, CalendarCheck, Package, CreditCard, Sparkles, Receipt } from "lucide-react";
+import { LayoutDashboard, UserCog, LogOut, MessagesSquare, Phone, Calendar, CalendarCheck, CreditCard, Sparkles, Receipt, Inbox } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function AceternityLayout({ children }: { children: React.ReactNode }) {
   const links = [
@@ -33,6 +33,13 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
       ),
     },
     {
+      label: "Inbox",
+      href: "/dashboard/inbox",
+      icon: (
+        <Inbox className="text-white h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
       label: "Calendar",
       href: "/dashboard/calendar",
       icon: (
@@ -44,13 +51,6 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
       href: "/dashboard/bookings",
       icon: (
         <CalendarCheck className="text-white h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Manage Catalog",
-      href: "/dashboard/catalog",
-      icon: (
-        <Package className="text-white h-5 w-5 flex-shrink-0" />
       ),
     },
     {
@@ -67,10 +67,18 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
         <CreditCard className="text-white h-5 w-5 flex-shrink-0" />
       ),
     },
+    {
+      label: "Subscriptions",
+      href: "/dashboard/subscriptions",
+      icon: (
+        <Receipt className="text-white h-5 w-5 flex-shrink-0" />
+      ),
+    },
   ];
   const [open, setOpen] = useState(false);
   const supabase = createSupabaseBrowserClient();
   const router = useRouter();
+  const pathname = usePathname();
   const [hasSession, setHasSession] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [companyName, setCompanyName] = useState<string>("Cliste Limited");
@@ -111,28 +119,28 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className={cn(
-        "rounded-2xl flex flex-col md:flex-row bg-[#0A0C0F] dark:bg-[#0A0C0F] w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "rounded-2xl flex flex-col md:flex-row bg-[#0A0C0F] dark:bg-[#0A0C0F] w-full flex-1 mx-auto overflow-hidden",
         "h-screen"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between gap-10">
+        <SidebarBody className="flex h-full flex-col items-center justify-between py-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden w-full items-center relative"
+            className="flex flex-1 flex-col items-center"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="absolute top-4 left-1/2 -translate-x-1/2 z-10"
+              className="flex items-center justify-center"
             >
               <Logo />
             </motion.div>
             <div className="flex flex-1 items-center justify-center">
-              <div className="flex flex-col gap-4 w-full items-center pl-1">
+              <div className="flex flex-col gap-3 w-full items-center">
                 {links.map((link, idx) => (
                   <motion.div
                     key={idx}
@@ -150,14 +158,14 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="w-full flex justify-center mb-4"
+            className="mt-6 w-full flex justify-center"
           >
             <button
               onClick={async () => {
                 await supabase.auth.signOut();
                 window.location.href = "/sign-in";
               }}
-              className="flex items-center justify-center py-2 w-full"
+              className="flex items-center justify-center py-2 px-6 w-full rounded-lg transition-all duration-200 hover:bg-neutral-800/50 [&>svg]:transition-all [&>svg]:duration-200 hover:[&>svg]:scale-110 hover:[&>svg]:text-white/90"
             >
               <LogOut className="text-white h-5 w-5 flex-shrink-0" />
             </button>
@@ -168,17 +176,17 @@ export default function AceternityLayout({ children }: { children: React.ReactNo
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex flex-1 items-center justify-center ml-4 mt-10 mb-10 mr-10"
+        className="flex flex-1 items-start justify-center m-0 md:m-4 lg:m-6"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="relative border border-neutral-200 dark:border-neutral-700 bg-[#0A0C0F] rounded-2xl flex flex-col gap-2 w-full h-full overflow-hidden"
+          className="relative border-0 md:border md:border-neutral-200 md:dark:border-neutral-700 bg-[#0A0C0F] rounded-none md:rounded-2xl flex flex-col gap-2 w-full h-full overflow-hidden"
         >
           {/* Vignette */}
           <div className="absolute inset-0 pointer-events-none [background:radial-gradient(80%_60%_at_50%_30%,rgba(255,255,255,0.06),transparent_60%)]" />
-          <div className="relative z-10 p-2 md:p-10">
+          <div className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden p-4 md:p-6">
             {children}
           </div>
         </motion.div>
@@ -196,8 +204,8 @@ export const Logo = () => {
       <Image
         src="/cliste-logo.png"
         alt="Cliste"
-        width={384}
-        height={384}
+        width={50}
+        height={50}
         className="flex-shrink-0"
         priority
       />

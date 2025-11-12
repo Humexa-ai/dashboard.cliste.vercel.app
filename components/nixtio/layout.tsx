@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { LayoutDashboard, MessagesSquare, Phone, Calendar, CalendarCheck, Package, CreditCard, Settings, User } from "lucide-react";
+import { LayoutDashboard, MessagesSquare, Phone, Calendar, CalendarCheck, CreditCard, Settings } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -39,13 +40,18 @@ export default function NixtioLayout({ children }: { children: React.ReactNode }
     return null;
   }
 
-  const navItems = [
+  type NavItem = {
+    label: string;
+    href: string;
+    icon?: LucideIcon;
+  };
+
+  const navItems: NavItem[] = [
     { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { label: "Chats", href: "/dashboard/chats", icon: MessagesSquare },
     { label: "Voice Calls", href: "/dashboard/calls", icon: Phone },
     { label: "Calendar", href: "/dashboard/calendar", icon: Calendar },
     { label: "Bookings", href: "/dashboard/bookings", icon: CalendarCheck },
-    { label: "Catalog", href: "/dashboard/catalog", icon: Package },
     { label: "Billing", href: "/api/billing/portal", icon: CreditCard },
     { label: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
@@ -68,7 +74,6 @@ export default function NixtioLayout({ children }: { children: React.ReactNode }
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
             {navItems.map((item) => {
-              const Icon = item.icon;
               const isActive = activePath === item.href;
               return (
                 <Link
@@ -76,13 +81,14 @@ export default function NixtioLayout({ children }: { children: React.ReactNode }
                   href={item.href}
                   onClick={() => setActivePath(item.href)}
                   className={cn(
-                    "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all",
+                    "flex items-center px-4 py-2.5 rounded-xl transition-all",
+                    item.icon ? "gap-3" : "gap-0",
                     isActive
                       ? "bg-white text-neutral-900"
                       : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
                   )}
                 >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  {item.icon ? <item.icon className="h-5 w-5 flex-shrink-0" /> : null}
                   <span className="text-sm font-medium">{item.label}</span>
                 </Link>
               );
