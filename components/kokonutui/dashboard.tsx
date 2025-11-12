@@ -41,17 +41,20 @@ export default function Dashboard() {
     };
     fetchUser();
 
-    // Update last synced timestamp every minute
+    // Track when the page loaded
+    const loadTime = Date.now();
+    
+    // Update last synced timestamp every 30 seconds
     const syncInterval = setInterval(() => {
-      const now = new Date();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
-      if (seconds < 60) {
+      const elapsedSeconds = Math.floor((Date.now() - loadTime) / 1000);
+      const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+      
+      if (elapsedSeconds < 60) {
         setLastSynced("Just now");
-      } else if (minutes === 1) {
+      } else if (elapsedMinutes === 1) {
         setLastSynced("1 minute ago");
       } else {
-        setLastSynced(`${minutes} minutes ago`);
+        setLastSynced(`${elapsedMinutes} minutes ago`);
       }
     }, 30000);
 
