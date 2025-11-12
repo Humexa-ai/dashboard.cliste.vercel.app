@@ -183,7 +183,7 @@ export async function GET(req: NextRequest) {
         expMonth: defaultPaymentMethod.card?.exp_month,
         expYear: defaultPaymentMethod.card?.exp_year,
       } : null,
-      invoices: invoices.data.map((inv) => ({
+      invoices: invoices.data.map((inv: any) => ({
         id: inv.id,
         number: inv.number,
         amount: inv.amount_paid,
